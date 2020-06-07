@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <link href="../../static/jd/assets/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+    <link href="../../static/jd/jdsales.css" rel="stylesheet">
+</head>
+<style>
+</style>
+<body>
+<div class="container" style="padding-top: 50px;">
+    <div class="row">
+        <div class="col-md-2">
+            <button onclick="addPurchase()" class="btn btn-primary" style="width: 100%" >Add Entry</button>
+        </div>
+        <div class="col-md-2">
+            <button onclick="editPurchase()" class="btn btn-success" style="width: 100%">Edit Entry</button>
+        </div>
+        <div class="col-md-2">
+            <button onclick="deletePurchase()" class="btn btn-danger" style="width: 100%">Delete Entry</button>
+        </div>
+    </div>
+</div>
+
+<div class="container" id="purchasePage">
+
+</div>
+
+<script src="../../static/jd/assets/vendor/jquery/jquery.min.js"></script>
+<script src="../../static/jd/assets/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+<script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+<script src="../../static/jd/jdsales.js"></script>
+</body>
+</html>
