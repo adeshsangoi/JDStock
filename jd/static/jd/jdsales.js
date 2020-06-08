@@ -118,7 +118,11 @@ $(Document).on('submit', '#formAdd', function (e) {
             // document.getElementById('shortage_add').value = "";
         },
         error: function (data) {
-            alert(data);
+            swal({
+                    icon: 'error',
+                    title: 'Error',
+                    text: 'Some Unknown Error Occured',
+                })
         }
     })
 })
@@ -215,7 +219,7 @@ $(Document).on('submit', '#formDelete', function (e) {
             csrfmiddlewaretoken: csrftoken
         },
         success: function (data) {
-            var context = JSON.parse(data)
+            var context = JSON.parse(data);
             ele.innerHTML = temp;
             document.getElementById('date_delete').value = context.date;
             document.getElementById('place_delete').value = context.place;
@@ -231,8 +235,28 @@ $(Document).on('submit', '#formDelete', function (e) {
             document.getElementById('shortage_delete').value = context.shortage;
 
         },
-        error: function (data) {
-            alert("Encountered Error");
+        error: function (xhr) {
+            var error_message = xhr.responseText.split(" ")[0]
+            console.log(error_message)
+            if (error_message === "MultipleObjectsReturned") {
+                swal({
+                    icon: 'error',
+                    title: 'Error',
+                    text: 'More than 1 Entry Found with given details',
+                })
+            } else if (error_message === "DoesNotExist") {
+                swal({
+                    icon: 'error',
+                    title: 'Error',
+                    text: 'No Entry Found with given details',
+                })
+            } else {
+                swal({
+                    icon: 'error',
+                    title: 'Error',
+                    text: 'Some Unknown Error Occured',
+                })
+            }
         }
     })
 })
@@ -265,7 +289,11 @@ $(Document).on('submit', '#formToBeDeleted', function (e) {
                         ele.innerHTML = ''
                     },
                     error: function (data) {
-                        alert("ERROR");
+                        swal({
+                            icon: 'error',
+                            title: 'Error',
+                            text: 'Some Unknown Error Occured',
+                        })
                     }
                 })
 
@@ -358,6 +386,8 @@ $(Document).on('submit', '#formEdit', function (e) {
             <br>\
             <button class="btn btn-lg btn-primary btn-block btn-signin" type="submit">Edit Given Entry</button>\
         </form>\
+    </div>\
+    <div id="hiddenElement" style="display: none;">\
     </div>';
 
     $.ajax({
@@ -384,10 +414,31 @@ $(Document).on('submit', '#formEdit', function (e) {
             document.getElementById('taka_edit').value = context.taka;
             document.getElementById('mts_edit').value = context.mts;
             document.getElementById('shortage_edit').value = context.shortage;
+            document.getElementById('hiddenElement').innerText = context.id;
 
         },
-        error: function (data) {
-            alert("Encountered Error");
+        error: function (xhr) {
+            var error_message = xhr.responseText.split(" ")[0]
+            console.log(error_message)
+            if (error_message === "MultipleObjectsReturned") {
+                swal({
+                    icon: 'error',
+                    title: 'Error',
+                    text: 'More than 1 Entry Found with given details',
+                })
+            } else if (error_message === "DoesNotExist") {
+                swal({
+                    icon: 'error',
+                    title: 'Error',
+                    text: 'No Entry Found with given details',
+                })
+            } else {
+                swal({
+                    icon: 'error',
+                    title: 'Error',
+                    text: 'Some Unknown Error Occured',
+                })
+            }
         }
     })
 })
@@ -404,7 +455,7 @@ $(Document).on('submit', '#formToBeEdited', function (e) {
         .then((isConfirm) => {
             if (isConfirm) {
                 var ele = document.getElementById('purchasePage');
-
+                var ids = document.getElementById('hiddenElement').innerHTML;
                 var csrftoken = getCookie('csrftoken');
                 $.ajax({
                     type: 'POST',
@@ -422,6 +473,7 @@ $(Document).on('submit', '#formToBeEdited', function (e) {
                         taka: $('#taka_edit').val(),
                         mts: $('#mts_edit').val(),
                         shortage: $('#shortage_edit').val(),
+                        id: ids,
                         csrfmiddlewaretoken: csrftoken
                     },
                     success: function (data) {
@@ -429,7 +481,11 @@ $(Document).on('submit', '#formToBeEdited', function (e) {
                         ele.innerHTML = ''
                     },
                     error: function (data) {
-                        alert("ERROR");
+                        swal({
+                            icon: 'error',
+                            title: 'Error',
+                            text: 'Some Unknown Error Occured',
+                        })
                     }
                 })
 

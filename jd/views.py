@@ -42,7 +42,7 @@ def deletePurchase(request):
         bale_r = request.POST['bale']
         party_quality_r = request.POST['party_quality']
 
-        d = Purchase.objects.get(bill_no=bill_r,bale_no=bale_r,party_quality_name=party_quality_r)
+        d = Purchase.objects.get(bill_no=bill_r, bale_no=bale_r, party_quality_name=party_quality_r)
         context = json.dumps(PurchaseSerializer(d).data)
 
         return HttpResponse(context)
@@ -54,7 +54,7 @@ def deleteGivenPurchase(request):
         bale_r = request.POST['bale']
         party_quality_r = request.POST['party_quality']
 
-        d = Purchase.objects.get(bill_no=bill_r,bale_no=bale_r,party_quality_name=party_quality_r)
+        d = Purchase.objects.get(bill_no=bill_r, bale_no=bale_r, party_quality_name=party_quality_r)
         d.delete()
 
         return HttpResponse()
@@ -66,14 +66,16 @@ def editPurchase(request):
         bale_r = request.POST['bale']
         party_quality_r = request.POST['party_quality']
 
-        d = Purchase.objects.get(bill_no=bill_r,bale_no=bale_r,party_quality_name=party_quality_r)
+        d = Purchase.objects.get(bill_no=bill_r, bale_no=bale_r, party_quality_name=party_quality_r)
         context = json.dumps(PurchaseSerializer(d).data)
-
+        context = context[:len(context) - 1]
+        context = context + ", " + '"id": ' + str(d.id) + '}'
         return HttpResponse(context)
 
 
 def editGivenPurchase(request):
     if request.method == "POST":
+        id_r = int(request.POST['id'])
         date_r = request.POST['date']
         place_r = request.POST['place']
         open_r = request.POST['open']
@@ -87,8 +89,8 @@ def editGivenPurchase(request):
         mts_r = request.POST['mts']
         shortage_r = request.POST['shortage']
 
-        d = Purchase.objects.get(bill_no=bill_r, bale_no=bale_r, party_quality_name=party_quality_r)
-        d.date =date_r
+        d = Purchase.objects.get(id=id_r)
+        d.date = date_r
         d.place = place_r
         d.open = open_r
         d.bill_no = bill_r
