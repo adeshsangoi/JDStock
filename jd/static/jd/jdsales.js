@@ -123,12 +123,6 @@ $(Document).on('submit', '#formAdd', function (e) {
     })
 })
 
-
-function editPurchase() {
-    var ele = document.getElementById('purchasePage');
-    ele.innerHTML = ''
-}
-
 function deletePurchase() {
     var ele = document.getElementById('purchasePage');
     ele.innerHTML =
@@ -142,7 +136,7 @@ function deletePurchase() {
                 <input id="bale_d" class="form-control" placeholder="Bale Number" type="number" required>\
             </div>\
             <div class="col-md-4">\
-                <input id="party_quality_d" class="form-control" placeholder="Party Name" type="text" required>\
+                <input id="party_quality_d" class="form-control" placeholder="Party Quality Name" type="text" required>\
             </div>\
         </div>\
         <br>\
@@ -245,15 +239,14 @@ $(Document).on('submit', '#formDelete', function (e) {
 
 $(Document).on('submit', '#formToBeDeleted', function (e) {
     e.preventDefault();
-    console.log("Entered Loop");
     swal({
-            title: "Your Entry will be deleted permanently!",
-            text: "Are you sure to proceed?",
-            icon: "warning",
-            buttons: true,
-            dangerMode: true,
-        })
-        .then((isConfirm)=>{
+        title: "This Entry will be deleted permanently!",
+        text: "Are you sure to proceed?",
+        icon: "warning",
+        buttons: true,
+        dangerMode: true,
+    })
+        .then((isConfirm) => {
             if (isConfirm) {
                 var ele = document.getElementById('purchasePage');
 
@@ -269,6 +262,170 @@ $(Document).on('submit', '#formToBeDeleted', function (e) {
                     },
                     success: function (data) {
                         swal("Entry Removed!", "Your entry is deleted permanently!", "success");
+                        ele.innerHTML = ''
+                    },
+                    error: function (data) {
+                        alert("ERROR");
+                    }
+                })
+
+            }
+        });
+})
+
+
+function editPurchase() {
+    var ele = document.getElementById('purchasePage');
+    ele.innerHTML =
+        '<div class="card card-container">\
+    <form class="form-signin" id="formEdit">\
+        <div class="row">\
+            <div class="col-md-4">\
+                <input id="bill_e" class="form-control" placeholder="Bill Number" type="number" required>\
+            </div>\
+            <div class="col-md-4">\
+                <input id="bale_e" class="form-control" placeholder="Bale Number" type="number" required>\
+            </div>\
+            <div class="col-md-4">\
+                <input id="party_quality_e" class="form-control" placeholder="Party Quality Name" type="text" required>\
+            </div>\
+        </div>\
+        <br>\
+        <button class="btn btn-lg btn-primary btn-block btn-signin" type="submit">View Entry to Edit</button>\
+    </form>\
+</div>';
+}
+
+$(Document).on('submit', '#formEdit', function (e) {
+    e.preventDefault();
+    var ele = document.getElementById('purchasePage');
+
+    var csrftoken = getCookie('csrftoken');
+    var temp =
+        '<div class="card card-container">\
+        <form class="form-signin" id="formToBeEdited">\
+            <div class="row">\
+                <div class="col-md-4">\
+                    <input id="date_edit" class="form-control" placeholder="Date" type="date" required>\
+                </div>\
+                <div class="col-md-4">\
+                    <input id="place_edit" class="form-control" placeholder="Place" type="text" required>\
+                </div>\
+                <div class="col-md-4">\
+                    <select id="open_edit" class="form-control" required>\
+                        <option>Pack</option>\
+                        <option>Open</option>\
+                    </select>\
+                </div>\
+            </div>\
+            <br>\
+            <div class="row">\
+                <div class="col-md-4">\
+                    <input id="bill_edit" class="form-control" placeholder="Bill Number" type="number" required>\
+                </div>\
+                <div class="col-md-4">\
+                    <input id="bale_edit" class="form-control" placeholder="Bale Number" type="number" required>\
+                </div>\
+                <div class="col-md-4">\
+                    <input id="party_edit" class="form-control" placeholder="Party Name" type="text" required>\
+                </div>\
+            </div>\
+            <br>\
+            <div class="row">\
+                <div class="col-md-4">\
+                    <input id="party_quality_edit" class="form-control" placeholder="Party Quality Name" type="text"\
+                           required>\
+                </div>\
+                <div class="col-md-4">\
+                    <input id="our_quality_edit" class="form-control" placeholder="Our Quality Name" type="text" required>\
+                </div>\
+                <div class="col-md-4">\
+                    <input id="hsn_edit" class="form-control" placeholder="HSN Code" type="text" required>\
+                </div>\
+            </div>\
+            <br>\
+            <div class="row">\
+                <div class="col-md-4">\
+                    <input id="taka_edit" class="form-control" placeholder="Number of Taka" type="number" required>\
+                </div>\
+                <div class="col-md-4">\
+                    <input id="mts_edit" class="form-control" placeholder="Total Metres" type="text" required>\
+                </div>\
+                <div class="col-md-4">\
+                    <input id="shortage_edit" class="form-control" placeholder="Shortage" type="text" required>\
+                </div>\
+            </div>\
+            <br>\
+            <button class="btn btn-lg btn-primary btn-block btn-signin" type="submit">Edit Given Entry</button>\
+        </form>\
+    </div>';
+
+    $.ajax({
+        type: 'POST',
+        url: '/editPurchase',
+        data: {
+            bill: $('#bill_e').val(),
+            bale: $('#bale_e').val(),
+            party_quality: $('#party_quality_e').val(),
+            csrfmiddlewaretoken: csrftoken
+        },
+        success: function (data) {
+            var context = JSON.parse(data)
+            ele.innerHTML = temp;
+            document.getElementById('date_edit').value = context.date;
+            document.getElementById('place_edit').value = context.place;
+            document.getElementById('open_edit').value = context.open;
+            document.getElementById('bill_edit').value = context.bill_no;
+            document.getElementById('bale_edit').value = context.bale_no;
+            document.getElementById('party_edit').value = context.party_name;
+            document.getElementById('party_quality_edit').value = context.party_quality_name;
+            document.getElementById('our_quality_edit').value = context.our_quality_name;
+            document.getElementById('hsn_edit').value = context.hsn_code;
+            document.getElementById('taka_edit').value = context.taka;
+            document.getElementById('mts_edit').value = context.mts;
+            document.getElementById('shortage_edit').value = context.shortage;
+
+        },
+        error: function (data) {
+            alert("Encountered Error");
+        }
+    })
+})
+
+$(Document).on('submit', '#formToBeEdited', function (e) {
+    e.preventDefault();
+    swal({
+        title: "This Entry will be Edited permanently!",
+        text: "Are you sure to proceed?",
+        icon: "warning",
+        buttons: true,
+        dangerMode: true,
+    })
+        .then((isConfirm) => {
+            if (isConfirm) {
+                var ele = document.getElementById('purchasePage');
+
+                var csrftoken = getCookie('csrftoken');
+                $.ajax({
+                    type: 'POST',
+                    url: '/editGivenPurchase',
+                    data: {
+                        date: $('#date_edit').val(),
+                        place: $('#place_edit').val(),
+                        open: $('#open_edit').val(),
+                        bill: $('#bill_edit').val(),
+                        bale: $('#bale_edit').val(),
+                        party: $('#party_edit').val(),
+                        party_quality: $('#party_quality_edit').val(),
+                        our_quality: $('#our_quality_edit').val(),
+                        hsn: $('#hsn_edit').val(),
+                        taka: $('#taka_edit').val(),
+                        mts: $('#mts_edit').val(),
+                        shortage: $('#shortage_edit').val(),
+                        csrfmiddlewaretoken: csrftoken
+                    },
+                    success: function (data) {
+                        swal("Entry Edited!", "The changes have been made", "success");
                         ele.innerHTML = ''
                     },
                     error: function (data) {
