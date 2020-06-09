@@ -1,3 +1,46 @@
+var numberOfEntries = 0;
+
+var addboxdata =
+    '<hr>\
+        <div class="row">\
+                 <div class="col-md-3">\
+                    <input id="bale_add" class="form-control" placeholder="Bale Number" type="number" required>\
+                </div>\
+                <div class="col-md-3">\
+                    <input id="party_quality_add" class="form-control" placeholder="Party Quality Name" type="text" oninput="this.value = this.value.toUpperCase()" required>\
+                </div>\
+                <div class="col-md-3">\
+                    <input id="our_quality_add" class="form-control" placeholder="Our Quality Name" oninput="this.value = this.value.toUpperCase()" type="text" required>\
+                </div>\
+                <div class="col-md-3">\
+                    <input id="design_add" class="form-control" placeholder="Design No." oninput="this.value = this.value.toUpperCase()" type="text" required>\
+                </div>\
+        </div>\
+    <br>\
+        <div class="row">\
+                <div class="col-md-2">\
+                    <input id="hsn_add" class="form-control" placeholder="HSN Code" oninput="this.value = this.value.toUpperCase()" type="text" required>\
+                </div>\
+                <div class="col-md-2">\
+                    <input id="taka_add" class="form-control" placeholder="Taka" oninput="this.value = this.value.toUpperCase()" type="number" required>\
+                </div>\
+                <div class="col-md-2">\
+                    <input id="mts_add" class="form-control" placeholder="Metres" oninput="this.value = this.value.toUpperCase()" type="text" required>\
+                </div>\
+                <div class="col-md-2">\
+                    <input id="shortage_add" class="form-control" placeholder="Shortage" oninput="this.value = this.value.toUpperCase()" type="text" required>\
+                </div>\
+                <div class="col-md-2">\
+                    <input id="place_add" class="form-control" placeholder="Place" oninput="this.value = this.value.toUpperCase()" type="text" required>\
+                </div>\
+                <div class="col-md-2">\
+                    <select id="open_add" class="form-control" required>\
+                        <option>PACK</option>\
+                        <option>OPEN</option>\
+                    </select>\
+                </div>\
+         </div>';
+
 function getCookie(name) {
     var cookieValue = null;
     if (document.cookie && document.cookie !== '') {
@@ -15,117 +58,158 @@ function getCookie(name) {
 }
 
 function addPurchase() {
-    console.log("Entered Add Purchase Function")
+    var purchasePage = document.getElementById('purchasePage');
+    purchasePage.innerHTML = '<br> <br> <br>\
+    <form id="add-head">\
+    <div class="row">\
+        <div class="col-md-2">\
+            <input id="entryNumber" class="form-control" placeholder="No. of entries" min="1" max="20" type="number" required>\
+        </div>\
+        <div class="col-md-2">\
+            <button type="submit" class="btn btn-secondary">Show Form</button>\
+        </div>\
+    </div>\
+    </form>'
 
-    var ele = document.getElementById('purchasePage');
-    ele.innerHTML =
-        '<div class="card card-container">\
-        <form class="form-signin" id="formAdd">\
-            <div class="row">\
-                <div class="col-md-4">\
-                    <input id="date_add" class="form-control" placeholder="Date" type="date" required>\
-                </div>\
-                <div class="col-md-4">\
-                    <input id="place_add" class="form-control" placeholder="Place" type="text" required>\
-                </div>\
-                <div class="col-md-4">\
-                    <select id="open_add" class="form-control" required>\
-                        <option>Pack</option>\
-                        <option>Open</option>\
-                    </select>\
-                </div>\
-            </div>\
-            <br>\
-            <div class="row">\
-                <div class="col-md-4">\
-                    <input id="bill_add" class="form-control" placeholder="Bill Number" type="number" required>\
-                </div>\
-                <div class="col-md-4">\
-                    <input id="bale_add" class="form-control" placeholder="Bale Number" type="number" required>\
-                </div>\
-                <div class="col-md-4">\
-                    <input id="party_add" class="form-control" placeholder="Party Name" type="text" required>\
-                </div>\
-            </div>\
-            <br>\
-            <div class="row">\
-                <div class="col-md-4">\
-                    <input id="party_quality_add" class="form-control" placeholder="Party Quality Name" type="text"\
-                           required>\
-                </div>\
-                <div class="col-md-4">\
-                    <input id="our_quality_add" class="form-control" placeholder="Our Quality Name" type="text" required>\
-                </div>\
-                <div class="col-md-4">\
-                    <input id="hsn_add" class="form-control" placeholder="HSN Code" type="text" required>\
-                </div>\
-            </div>\
-            <br>\
-            <div class="row">\
-                <div class="col-md-4">\
-                    <input id="taka_add" class="form-control" placeholder="Number of Taka" type="number" required>\
-                </div>\
-                <div class="col-md-4">\
-                    <input id="mts_add" class="form-control" placeholder="Total Metres" type="text" required>\
-                </div>\
-                <div class="col-md-4">\
-                    <input id="shortage_add" class="form-control" placeholder="Shortage" type="text" required>\
-                </div>\
-            </div>\
-            <br>\
-            <button class="btn btn-lg btn-primary btn-block btn-signin" type="submit">Add Purchase Entry</button>\
-        </form>\
-    </div>';
 }
 
-$(Document).on('submit', '#formAdd', function (e) {
+$(document).on('submit', '#add-head', function (e) {
     e.preventDefault();
-    var ele = document.getElementById('purchasePage');
+    var purchasePage = document.getElementById('purchasePage');
+    numberOfEntries = document.getElementById('entryNumber').value;
+    // numberOfEntry = numberOfEntries
+    // console.log(numberOfEntries)
+    purchasePage.innerHTML = "";
+    var addForm =
+        '<div class="card card-container">\
+            <form class="form-signin" id="formAdd">\
+                <div class="row">\
+                    <div class="col-md-4">\
+                        <input id="date_add" class="form-control" placeholder="Date" type="date"  required>\
+                    </div>\
+                    <div class="col-md-4">\
+                        <input id="bill_add" class="form-control" placeholder="Bill Number" type="number" required>\
+                    </div>\
+                    <div class="col-md-4">\
+                        <input id="party_add" class="form-control" placeholder="Party Name" type="text" oninput="this.value = this.value.toUpperCase()"  required>\
+                    </div>\
+                </div>\
+                <div class="baleEntry" id="baleEntry">\
+                </div>\
+                <hr><button class="btn btn-lg btn-primary btn-block btn-signin" type="submit">Add Purchase Entry</button>\
+            </form>\
+        </div>\
+        <br>\
+            <br>';
 
+    purchasePage.innerHTML = addForm;
+    var i;
+    var data = '';
+    for (i = 0; i < numberOfEntries; i++) {
+        data = data + addboxdata;
+    }
+    document.getElementById("baleEntry").innerHTML = data;
+    document.getElementById('date_add').valueAsDate = new Date();
+
+    for (i = 0; i < numberOfEntries; i++) {
+        document.getElementById("bale_add").setAttribute("id", "bale_add"+i.toString());
+        document.getElementById("party_quality_add").setAttribute("id", "party_quality_add"+i.toString());
+        document.getElementById("our_quality_add").setAttribute("id", "our_quality_add"+i.toString());
+        document.getElementById("design_add").setAttribute("id", "design_add"+i.toString());
+        document.getElementById("hsn_add").setAttribute("id", "hsn_add"+i.toString());
+        document.getElementById("taka_add").setAttribute("id", "taka_add"+i.toString());
+        document.getElementById("mts_add").setAttribute("id", "mts_add"+i.toString());
+        document.getElementById("shortage_add").setAttribute("id", "shortage_add"+i.toString());
+        document.getElementById("place_add").setAttribute("id", "place_add"+i.toString());
+        document.getElementById("open_add").setAttribute("id", "open_add"+i.toString());
+    }
+})
+
+
+
+
+$(document).on('submit', '#formAdd', function (e) {
+    e.preventDefault();
+    var purchasePage = document.getElementById('purchasePage');
     var csrftoken = getCookie('csrftoken');
+    dataArr = new Array(numberOfEntries);
+    for (var i = 0; i < numberOfEntries; i++) {
+        dataArr[i] = [0,0,0,0,0,0,0,0,0,0];
+    }
+    console.log(dataArr);
+    for (var j = 0; j < numberOfEntries; j++) {
+        dataArr[j][0] = document.getElementById("bale_add"+j.toString()).value;
+        dataArr[j][1] = document.getElementById("party_quality_add"+j.toString()).value;
+        dataArr[j][2] = document.getElementById("our_quality_add"+j.toString()).value;
+        dataArr[j][3] = document.getElementById("design_add"+j.toString()).value;
+        dataArr[j][4] = document.getElementById("hsn_add"+j.toString()).value;
+        dataArr[j][5] = document.getElementById("taka_add"+j.toString()).value;
+        dataArr[j][6] = document.getElementById("mts_add"+j.toString()).value;
+        dataArr[j][7] = document.getElementById("shortage_add"+j.toString()).value;
+        dataArr[j][8] = document.getElementById("place_add"+j.toString()).value;
+        dataArr[j][9] = document.getElementById("open_add"+j.toString()).value;
+    }
+
+    dat = JSON.stringify(dataArr);
+
     $.ajax({
         type: 'POST',
         url: '/addPurchase',
         data: {
             date: $('#date_add').val(),
-            place: $('#place_add').val(),
-            open: $('#open_add').val(),
             bill: $('#bill_add').val(),
-            bale: $('#bale_add').val(),
             party: $('#party_add').val(),
-            party_quality: $('#party_quality_add').val(),
-            our_quality: $('#our_quality_add').val(),
-            hsn: $('#hsn_add').val(),
-            taka: $('#taka_add').val(),
-            mts: $('#mts_add').val(),
-            shortage: $('#shortage_add').val(),
+            'dataArray' : dat,
             csrfmiddlewaretoken: csrftoken
         },
         success: function (data) {
             swal("Congrats!", ", Your entry is Added!", "success");
-            ele.innerHTML = "";
-            // document.getElementById('date_add').value = "";
-            // document.getElementById('place_add').value = "";
-            // document.getElementById('open_add').value = "Pack";
-            // document.getElementById('bill_add').value = "";
-            // document.getElementById('bale_add').value = "";
-            // document.getElementById('party_add').value = "";
-            // document.getElementById('party_quality_add').value = "";
-            // document.getElementById('our_quality_add').value = "";
-            // document.getElementById('hsn_add').value = "";
-            // document.getElementById('taka_add').value = "";
-            // document.getElementById('mts_add').value = "";
-            // document.getElementById('shortage_add').value = "";
+            purchasePage.innerHTML = "";
+
         },
         error: function (data) {
             swal({
-                    icon: 'error',
-                    title: 'Error',
-                    text: 'Some Unknown Error Occured',
-                })
+                icon: 'error',
+                title: 'Error',
+                text: 'Some Unknown Error Occured',
+            })
         }
     })
 })
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 function deletePurchase() {
     var ele = document.getElementById('purchasePage');
@@ -149,7 +233,7 @@ function deletePurchase() {
 </div>';
 }
 
-$(Document).on('submit', '#formDelete', function (e) {
+$(document).on('submit', '#formDelete', function (e) {
     e.preventDefault();
     var ele = document.getElementById('purchasePage');
 
@@ -261,7 +345,7 @@ $(Document).on('submit', '#formDelete', function (e) {
     })
 })
 
-$(Document).on('submit', '#formToBeDeleted', function (e) {
+$(document).on('submit', '#formToBeDeleted', function (e) {
     e.preventDefault();
     swal({
         title: "This Entry will be deleted permanently!",
@@ -324,7 +408,7 @@ function editPurchase() {
 </div>';
 }
 
-$(Document).on('submit', '#formEdit', function (e) {
+$(document).on('submit', '#formEdit', function (e) {
     e.preventDefault();
     var ele = document.getElementById('purchasePage');
 
@@ -443,7 +527,7 @@ $(Document).on('submit', '#formEdit', function (e) {
     })
 })
 
-$(Document).on('submit', '#formToBeEdited', function (e) {
+$(document).on('submit', '#formToBeEdited', function (e) {
     e.preventDefault();
     swal({
         title: "This Entry will be Edited permanently!",

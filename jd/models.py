@@ -18,6 +18,7 @@ class Purchase(models.Model):
     taka = models.IntegerField()
     mts = models.CharField(max_length=10)
     shortage = models.CharField(max_length=10)
+    design = models.CharField(max_length=20,blank=True)
 
     def __str__(self):
         return "Bill " + str(self.bill_no) + " - Bale " + str(self.bale_no) + " - " + self.party_name + " - " + str(self.date)
@@ -36,3 +37,5 @@ class PurchaseSerializer(serializers.Serializer):
     taka = serializers.IntegerField()
     mts = serializers.CharField(max_length=10)
     shortage = serializers.CharField(max_length=10)
+    design = models.CharField(max_length=20,blank=True)
+
