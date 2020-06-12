@@ -10,5 +10,6 @@ urlpatterns = [
     path('deleteGivenPurchase', views.deleteGivenPurchase, name="deleteGivenPurchase"),
     path('editPurchase', views.editPurchase, name="editPurchase"),
     path('editGivenPurchase', views.editGivenPurchase, name="editGivenPurchase"),
-
+    path('sale', views.sale, name="sale"),
+    path('gatherData',views.gatherData,name="gatherData"),
 ]

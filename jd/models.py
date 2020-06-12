@@ -39,3 +39,22 @@ class PurchaseSerializer(serializers.Serializer):
     shortage = serializers.CharField(max_length=10)
     design = serializers.CharField(max_length=20)
 
+
+class Sale(models.Model):
+    date = models.DateField()
+    buyer_name = models.CharField(max_length=30)
+    bale_no = models.IntegerField()
+    our_quality_name = models.CharField(max_length=30)
+    design =  models.CharField(max_length=20,blank=True)
+    taka = models.IntegerField()
+    mts = models.FloatField()
+
+
+class SaleSerializer(serializers.Serializer):
+    date = serializers.DateField()
+    buyer_name = serializers.CharField(max_length=30)
+    bale_no = serializers.IntegerField()
+    our_quality_name = serializers.CharField(max_length=30)
+    design = serializers.CharField(max_length=20)
+    taka = serializers.IntegerField()
+    mts = serializers.FloatField()

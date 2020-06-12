@@ -14,6 +14,10 @@ def purchase(request):
     return render(request, 'jd/purchase.html')
 
 
+def sale(request):
+    return render(request, 'jd/sale.html')
+
+
 @csrf_exempt
 def addPurchase(request):
     if request.method == "POST":
@@ -35,7 +39,7 @@ def addPurchase(request):
 
             obj = Purchase(date=date_r, place=place_r, open=open_r, bill_no=bill_r, bale_no=bale_r, party_name=party_r,
                            party_quality_name=party_quality_r, our_quality_name=our_quality_r, hsn_code=hsn_r,
-                           taka=taka_r, mts=mts_r, shortage=shortage_r,design=design_r)
+                           taka=taka_r, mts=mts_r, shortage=shortage_r, design=design_r)
             obj.save()
 
         return HttpResponse('')
@@ -129,3 +133,15 @@ def editGivenPurchase(request):
         d.save()
 
         return HttpResponse()
+
+
+@csrf_exempt
+def gatherData(request):
+    mydata = Purchase.objects.all()
+    dict = {}
+    for item in mydata:
+        dict[item.bale_no] = []
+    for item in mydata:
+        dict[item.bale_no].append(item.our_quality_name)
+
+    return HttpResponse(json.dumps(dict))
