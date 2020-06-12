@@ -407,18 +407,6 @@ $(document).on('submit', '#formToBeDeleted', function (e) {
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
 function editPurchase() {
     var purchasePage = document.getElementById('purchasePage');
     purchasePage.innerHTML = '<br> <br> <br>\
@@ -435,7 +423,6 @@ function editPurchase() {
     </form>'
 
 }
-
 
 $(document).on('submit', '#edit-head', function (e) {
     e.preventDefault();
