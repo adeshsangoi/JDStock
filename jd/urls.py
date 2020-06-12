@@ -6,6 +6,7 @@ urlpatterns = [
     path('purchase',views.purchase,name="purchase"),
     path('addPurchase', views.addPurchase, name="addPurchase"),
     path('deletePurchase', views.deletePurchase, name="deletePurchase"),
+    path('PurchaseBale', views.PurchaseBale, name="PurchaseBale"),
     path('deleteGivenPurchase', views.deleteGivenPurchase, name="deleteGivenPurchase"),
     path('editPurchase', views.editPurchase, name="editPurchase"),
     path('editGivenPurchase', views.editGivenPurchase, name="editGivenPurchase"),

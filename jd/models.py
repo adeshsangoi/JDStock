@@ -37,5 +37,5 @@ class PurchaseSerializer(serializers.Serializer):
     taka = serializers.IntegerField()
     mts = serializers.CharField(max_length=10)
     shortage = serializers.CharField(max_length=10)
-    design = models.CharField(max_length=20,blank=True)
+    design = serializers.CharField(max_length=20)
 

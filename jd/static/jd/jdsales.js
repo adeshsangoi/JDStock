@@ -1,7 +1,12 @@
 var numberOfEntries = 0;
-
+var bill_no_to_delete = 0;
+var bill_no_to_edit = 0;
+var id_to_edit = 0;
 var addboxdata =
-    '<hr>\
+    '<hr style="margin-left: -24px;margin-right: -24px;">\
+        <div>\
+            <h6 id="headerAdd" style="font-family: sans-serif;font-size:12px; text-transform: uppercase;padding-left: 5px;"></h6>\
+        </div>\
         <div class="row">\
                  <div class="col-md-3">\
                     <input id="bale_add" class="form-control" placeholder="Bale Number" type="number" required>\
@@ -13,7 +18,7 @@ var addboxdata =
                     <input id="our_quality_add" class="form-control" placeholder="Our Quality Name" oninput="this.value = this.value.toUpperCase()" type="text" required>\
                 </div>\
                 <div class="col-md-3">\
-                    <input id="design_add" class="form-control" placeholder="Design No." oninput="this.value = this.value.toUpperCase()" type="text" required>\
+                    <input id="design_add" class="form-control" placeholder="Design No." oninput="this.value = this.value.toUpperCase()" type="text">\
                 </div>\
         </div>\
     <br>\
@@ -39,6 +44,7 @@ var addboxdata =
                         <option>OPEN</option>\
                     </select>\
                 </div>\
+               </div>\
          </div>';
 
 function getCookie(name) {
@@ -80,9 +86,10 @@ $(document).on('submit', '#add-head', function (e) {
     // numberOfEntry = numberOfEntries
     // console.log(numberOfEntries)
     purchasePage.innerHTML = "";
-    var addForm =
+    purchasePage.innerHTML =
         '<div class="card card-container">\
             <form class="form-signin" id="formAdd">\
+            <h6 style="font-family: sans-serif;text-transform: uppercase;padding-left: 5px;">BILL DETAILS</h6>\
                 <div class="row">\
                     <div class="col-md-4">\
                         <input id="date_add" class="form-control" placeholder="Date" type="date"  required>\
@@ -96,13 +103,11 @@ $(document).on('submit', '#add-head', function (e) {
                 </div>\
                 <div class="baleEntry" id="baleEntry">\
                 </div>\
-                <hr><button class="btn btn-lg btn-primary btn-block btn-signin" type="submit">Add Purchase Entry</button>\
+                <hr style="margin-left: -24px;margin-right: -24px;"><button class="btn btn-lg btn-primary btn-block btn-signin" type="submit">Add Purchase Entry</button>\
             </form>\
         </div>\
         <br>\
             <br>';
-
-    purchasePage.innerHTML = addForm;
     var i;
     var data = '';
     for (i = 0; i < numberOfEntries; i++) {
@@ -112,20 +117,20 @@ $(document).on('submit', '#add-head', function (e) {
     document.getElementById('date_add').valueAsDate = new Date();
 
     for (i = 0; i < numberOfEntries; i++) {
-        document.getElementById("bale_add").setAttribute("id", "bale_add"+i.toString());
-        document.getElementById("party_quality_add").setAttribute("id", "party_quality_add"+i.toString());
-        document.getElementById("our_quality_add").setAttribute("id", "our_quality_add"+i.toString());
-        document.getElementById("design_add").setAttribute("id", "design_add"+i.toString());
-        document.getElementById("hsn_add").setAttribute("id", "hsn_add"+i.toString());
-        document.getElementById("taka_add").setAttribute("id", "taka_add"+i.toString());
-        document.getElementById("mts_add").setAttribute("id", "mts_add"+i.toString());
-        document.getElementById("shortage_add").setAttribute("id", "shortage_add"+i.toString());
-        document.getElementById("place_add").setAttribute("id", "place_add"+i.toString());
-        document.getElementById("open_add").setAttribute("id", "open_add"+i.toString());
+        document.getElementById("headerAdd").innerHTML = "Entry " + (i + 1).toString();
+        document.getElementById("headerAdd").setAttribute("id", "headerAdd " + i.toString());
+        document.getElementById("bale_add").setAttribute("id", "bale_add" + i.toString());
+        document.getElementById("party_quality_add").setAttribute("id", "party_quality_add" + i.toString());
+        document.getElementById("our_quality_add").setAttribute("id", "our_quality_add" + i.toString());
+        document.getElementById("design_add").setAttribute("id", "design_add" + i.toString());
+        document.getElementById("hsn_add").setAttribute("id", "hsn_add" + i.toString());
+        document.getElementById("taka_add").setAttribute("id", "taka_add" + i.toString());
+        document.getElementById("mts_add").setAttribute("id", "mts_add" + i.toString());
+        document.getElementById("shortage_add").setAttribute("id", "shortage_add" + i.toString());
+        document.getElementById("place_add").setAttribute("id", "place_add" + i.toString());
+        document.getElementById("open_add").setAttribute("id", "open_add" + i.toString());
     }
 })
-
-
 
 
 $(document).on('submit', '#formAdd', function (e) {
@@ -134,20 +139,20 @@ $(document).on('submit', '#formAdd', function (e) {
     var csrftoken = getCookie('csrftoken');
     dataArr = new Array(numberOfEntries);
     for (var i = 0; i < numberOfEntries; i++) {
-        dataArr[i] = [0,0,0,0,0,0,0,0,0,0];
+        dataArr[i] = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
     }
     console.log(dataArr);
     for (var j = 0; j < numberOfEntries; j++) {
-        dataArr[j][0] = document.getElementById("bale_add"+j.toString()).value;
-        dataArr[j][1] = document.getElementById("party_quality_add"+j.toString()).value;
-        dataArr[j][2] = document.getElementById("our_quality_add"+j.toString()).value;
-        dataArr[j][3] = document.getElementById("design_add"+j.toString()).value;
-        dataArr[j][4] = document.getElementById("hsn_add"+j.toString()).value;
-        dataArr[j][5] = document.getElementById("taka_add"+j.toString()).value;
-        dataArr[j][6] = document.getElementById("mts_add"+j.toString()).value;
-        dataArr[j][7] = document.getElementById("shortage_add"+j.toString()).value;
-        dataArr[j][8] = document.getElementById("place_add"+j.toString()).value;
-        dataArr[j][9] = document.getElementById("open_add"+j.toString()).value;
+        dataArr[j][0] = document.getElementById("bale_add" + j.toString()).value;
+        dataArr[j][1] = document.getElementById("party_quality_add" + j.toString()).value;
+        dataArr[j][2] = document.getElementById("our_quality_add" + j.toString()).value;
+        dataArr[j][3] = document.getElementById("design_add" + j.toString()).value;
+        dataArr[j][4] = document.getElementById("hsn_add" + j.toString()).value;
+        dataArr[j][5] = document.getElementById("taka_add" + j.toString()).value;
+        dataArr[j][6] = document.getElementById("mts_add" + j.toString()).value;
+        dataArr[j][7] = document.getElementById("shortage_add" + j.toString()).value;
+        dataArr[j][8] = document.getElementById("place_add" + j.toString()).value;
+        dataArr[j][9] = document.getElementById("open_add" + j.toString()).value;
     }
 
     dat = JSON.stringify(dataArr);
@@ -159,7 +164,7 @@ $(document).on('submit', '#formAdd', function (e) {
             date: $('#date_add').val(),
             bill: $('#bill_add').val(),
             party: $('#party_add').val(),
-            'dataArray' : dat,
+            'dataArray': dat,
             csrfmiddlewaretoken: csrftoken
         },
         success: function (data) {
@@ -178,64 +183,80 @@ $(document).on('submit', '#formAdd', function (e) {
 })
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 function deletePurchase() {
-    var ele = document.getElementById('purchasePage');
-    ele.innerHTML =
-        '<div class="card card-container">\
-    <form class="form-signin" id="formDelete">\
-        <div class="row">\
-            <div class="col-md-4">\
-                <input id="bill_d" class="form-control" placeholder="Bill Number" type="number" required>\
-            </div>\
-            <div class="col-md-4">\
-                <input id="bale_d" class="form-control" placeholder="Bale Number" type="number" required>\
-            </div>\
-            <div class="col-md-4">\
-                <input id="party_quality_d" class="form-control" placeholder="Party Quality Name" type="text" required>\
-            </div>\
+    var purchasePage = document.getElementById('purchasePage');
+    purchasePage.innerHTML = '<br> <br> <br>\
+    <form id="delete-head">\
+    <h6 style="font-family: sans-serif">Enter Bill Number to be Deleted</h6>\
+    <div class="row">\
+        <div class="col-md-2">\
+            <input id="bill_no_for_delete" class="form-control" placeholder="Bill Number" min="1" type="number" required>\
         </div>\
-        <br>\
-        <button class="btn btn-lg btn-primary btn-block btn-signin" type="submit">View Entry to Delete</button>\
-    </form>\
-</div>';
+        <div class="col-md-2">\
+            <button type="submit" class="btn btn-secondary">Submit</button>\
+        </div>\
+    </div>\
+    </form>'
+
 }
+
+$(document).on('submit', '#delete-head', function (e) {
+    e.preventDefault();
+    bill_no_to_delete = document.getElementById('bill_no_for_delete').value;
+    var purchasePage = document.getElementById('purchasePage');
+    var bale_form = '<br> <br> \
+    <form id="formDelete">\
+    <h6 style="font-family: sans-serif">Choose Bale Number to be Deleted</h6>\
+    <div class="row">\
+        <div class="col-md-2">\
+                    <select id="bale_options_delete" class="form-control" required>\
+                    </select>\
+        </div>\
+        <div class="col-md-2">\
+            <button type="submit" class="btn btn-secondary">Submit</button>\
+        </div>\
+    </div>\
+    </form>'
+
+
+    var csrftoken = getCookie('csrftoken');
+
+
+    $.ajax({
+        type: 'POST',
+        url: '/PurchaseBale',
+        data: {
+            bill: bill_no_to_delete,
+            csrfmiddlewaretoken: csrftoken
+        },
+        success: function (data) {
+            var context = JSON.parse(data);
+            if (context.length >= 1) {
+                if (document.getElementById('bale_options_delete') == null) {
+                    purchasePage.innerHTML = purchasePage.innerHTML + bale_form;
+                }
+                document.getElementById('bill_no_for_delete').value = bill_no_to_delete;
+
+                var option_field = ''
+                for (var i = 0; i < context.length; i++) {
+                    option_field = option_field + '<option>' + context[i].toString() + '</option>'
+                }
+                document.getElementById('bale_options_delete').innerHTML = option_field;
+            } else {
+                swal({
+                    icon: 'error',
+                    title: 'Error',
+                    text: 'No Entry Found with Bill Number = ' + bill_no_to_delete.toString(),
+                })
+            }
+        },
+    })
+})
+
 
 $(document).on('submit', '#formDelete', function (e) {
     e.preventDefault();
-    var ele = document.getElementById('purchasePage');
+    var purchasePage = document.getElementById('purchasePage');
 
     var csrftoken = getCookie('csrftoken');
     var temp =
@@ -246,46 +267,46 @@ $(document).on('submit', '#formDelete', function (e) {
                     <input id="date_delete" class="form-control" type="date" readonly >\
                 </div>\
                 <div class="col-md-4">\
-                    <input id="place_delete" class="form-control" type="text" value="JD" readonly>\
-                </div>\
-                <div class="col-md-4">\
-                    <input id="open_delete" class="form-control" type="text" readonly >\
-                </div>\
-            </div>\
-            <br>\
-            <div class="row">\
-                <div class="col-md-4">\
                     <input id="bill_delete" class="form-control" type="number" readonly>\
-                </div>\
-                <div class="col-md-4">\
-                    <input id="bale_delete" class="form-control" type="number" readonly>\
                 </div>\
                 <div class="col-md-4">\
                     <input id="party_delete" class="form-control" type="text" readonly>\
                 </div>\
-            </div>\
-            <br>\
+             </div>  \
+             <br>\
             <div class="row">\
-                <div class="col-md-4">\
+                <div class="col-md-3">\
+                    <input id="bale_delete" class="form-control" type="number" readonly>\
+                </div>\
+                <div class="col-md-3">\
                     <input id="party_quality_delete" class="form-control" type="text" readonly>\
                 </div>\
-                <div class="col-md-4">\
+                <div class="col-md-3">\
                     <input id="our_quality_delete" class="form-control" type="text" readonly>\
                 </div>\
-                <div class="col-md-4">\
-                    <input id="hsn_delete" class="form-control" type="text" readonly>\
+                <div class="col-md-3">\
+                    <input id="design_delete" class="form-control" type="text" readonly>\
                 </div>\
             </div>\
             <br>\
             <div class="row">\
-                <div class="col-md-4">\
+                <div class="col-md-2">\
+                    <input id="hsn_delete" class="form-control" type="text" readonly>\
+                </div>\
+                <div class="col-md-2">\
                     <input id="taka_delete" class="form-control" type="number" readonly>\
                 </div>\
-                <div class="col-md-4">\
+                <div class="col-md-2">\
                     <input id="mts_delete" class="form-control" type="text" readonly>\
                 </div>\
-                <div class="col-md-4">\
+                <div class="col-md-2">\
                     <input id="shortage_delete" class="form-control" type="text" readonly>\
+                </div>\
+                <div class="col-md-2">\
+                    <input id="place_delete" class="form-control" type="text" value="JD" readonly>\
+                </div>\
+                <div class="col-md-2">\
+                    <input id="open_delete" class="form-control" type="text" readonly >\
                 </div>\
             </div>\
             <br>\
@@ -297,14 +318,13 @@ $(document).on('submit', '#formDelete', function (e) {
         type: 'POST',
         url: '/deletePurchase',
         data: {
-            bill: $('#bill_d').val(),
-            bale: $('#bale_d').val(),
-            party_quality: $('#party_quality_d').val(),
+            bill: bill_no_to_delete,
+            bale: $('#bale_options_delete').val(),
             csrfmiddlewaretoken: csrftoken
         },
         success: function (data) {
             var context = JSON.parse(data);
-            ele.innerHTML = temp;
+            purchasePage.innerHTML = temp;
             document.getElementById('date_delete').value = context.date;
             document.getElementById('place_delete').value = context.place;
             document.getElementById('open_delete').value = context.open;
@@ -317,7 +337,7 @@ $(document).on('submit', '#formDelete', function (e) {
             document.getElementById('taka_delete').value = context.taka;
             document.getElementById('mts_delete').value = context.mts;
             document.getElementById('shortage_delete').value = context.shortage;
-
+            document.getElementById('design_delete').value = context.design;
         },
         error: function (xhr) {
             var error_message = xhr.responseText.split(" ")[0]
@@ -386,27 +406,91 @@ $(document).on('submit', '#formToBeDeleted', function (e) {
 })
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
 function editPurchase() {
-    var ele = document.getElementById('purchasePage');
-    ele.innerHTML =
-        '<div class="card card-container">\
-    <form class="form-signin" id="formEdit">\
-        <div class="row">\
-            <div class="col-md-4">\
-                <input id="bill_e" class="form-control" placeholder="Bill Number" type="number" required>\
-            </div>\
-            <div class="col-md-4">\
-                <input id="bale_e" class="form-control" placeholder="Bale Number" type="number" required>\
-            </div>\
-            <div class="col-md-4">\
-                <input id="party_quality_e" class="form-control" placeholder="Party Quality Name" type="text" required>\
-            </div>\
+    var purchasePage = document.getElementById('purchasePage');
+    purchasePage.innerHTML = '<br> <br> <br>\
+    <form id="edit-head">\
+    <h6 style="font-family: sans-serif">Enter Bill Number to be Edited</h6>\
+    <div class="row">\
+        <div class="col-md-2">\
+            <input id="bill_no_for_edit" class="form-control" placeholder="Bill Number" min="1" type="number" required>\
         </div>\
-        <br>\
-        <button class="btn btn-lg btn-primary btn-block btn-signin" type="submit">View Entry to Edit</button>\
-    </form>\
-</div>';
+        <div class="col-md-2">\
+            <button type="submit" class="btn btn-secondary">Submit</button>\
+        </div>\
+    </div>\
+    </form>'
+
 }
+
+
+$(document).on('submit', '#edit-head', function (e) {
+    e.preventDefault();
+    bill_no_to_edit = document.getElementById('bill_no_for_edit').value;
+    var purchasePage = document.getElementById('purchasePage');
+    var bale_form = '<br> <br> \
+    <form id="formEdit">\
+    <h6 style="font-family: sans-serif">Choose Bale Number to be Edited</h6>\
+    <div class="row">\
+        <div class="col-md-2">\
+                    <select id="bale_options_edit" class="form-control" required>\
+                    </select>\
+        </div>\
+        <div class="col-md-2">\
+            <button type="submit" class="btn btn-secondary">Submit</button>\
+        </div>\
+    </div>\
+    </form>'
+
+
+    var csrftoken = getCookie('csrftoken');
+
+
+    $.ajax({
+        type: 'POST',
+        url: '/PurchaseBale',
+        data: {
+            bill: bill_no_to_edit,
+            csrfmiddlewaretoken: csrftoken
+        },
+        success: function (data) {
+            var context = JSON.parse(data);
+            if (context.length >= 1) {
+                if (document.getElementById('bale_options_edit') == null) {
+                    purchasePage.innerHTML = purchasePage.innerHTML + bale_form;
+                }
+                document.getElementById('bill_no_for_edit').value = bill_no_to_edit;
+
+                var option_field = ''
+                for (var i = 0; i < context.length; i++) {
+                    option_field = option_field + '<option>' + context[i].toString() + '</option>'
+                }
+                document.getElementById('bale_options_edit').innerHTML = option_field;
+            } else {
+                swal({
+                    icon: 'error',
+                    title: 'Error',
+                    text: 'No Entry Found with Bill Number = ' + bill_no_to_edit.toString(),
+                })
+            }
+        },
+    })
+})
+
+
 
 $(document).on('submit', '#formEdit', function (e) {
     e.preventDefault();
@@ -421,66 +505,63 @@ $(document).on('submit', '#formEdit', function (e) {
                     <input id="date_edit" class="form-control" placeholder="Date" type="date" required>\
                 </div>\
                 <div class="col-md-4">\
-                    <input id="place_edit" class="form-control" placeholder="Place" type="text" required>\
-                </div>\
-                <div class="col-md-4">\
-                    <select id="open_edit" class="form-control" required>\
-                        <option>Pack</option>\
-                        <option>Open</option>\
-                    </select>\
-                </div>\
-            </div>\
-            <br>\
-            <div class="row">\
-                <div class="col-md-4">\
                     <input id="bill_edit" class="form-control" placeholder="Bill Number" type="number" required>\
-                </div>\
-                <div class="col-md-4">\
-                    <input id="bale_edit" class="form-control" placeholder="Bale Number" type="number" required>\
                 </div>\
                 <div class="col-md-4">\
                     <input id="party_edit" class="form-control" placeholder="Party Name" type="text" required>\
                 </div>\
             </div>\
             <br>\
-            <div class="row">\
-                <div class="col-md-4">\
+             <div class="row">\
+                <div class="col-md-3">\
+                    <input id="bale_edit" class="form-control" placeholder="Bale Number" type="number" required>\
+                </div>\
+                <div class="col-md-3">\
                     <input id="party_quality_edit" class="form-control" placeholder="Party Quality Name" type="text"\
                            required>\
                 </div>\
-                <div class="col-md-4">\
+                <div class="col-md-3">\
                     <input id="our_quality_edit" class="form-control" placeholder="Our Quality Name" type="text" required>\
                 </div>\
-                <div class="col-md-4">\
-                    <input id="hsn_edit" class="form-control" placeholder="HSN Code" type="text" required>\
+                <div class="col-md-3">\
+                    <input id="design_edit" class="form-control" placeholder="Design Number" type="text">\
                 </div>\
-            </div>\
-            <br>\
-            <div class="row">\
-                <div class="col-md-4">\
+             </div>\
+             <br>\
+             <div class="row">\
+                 <div class="col-md-2">\
+                    <input id="hsn_edit" class="form-control" placeholder="HSN Code" type="text" required>\
+                 </div>\
+                 <div class="col-md-2">\
                     <input id="taka_edit" class="form-control" placeholder="Number of Taka" type="number" required>\
                 </div>\
-                <div class="col-md-4">\
+                <div class="col-md-2">\
                     <input id="mts_edit" class="form-control" placeholder="Total Metres" type="text" required>\
                 </div>\
-                <div class="col-md-4">\
+                <div class="col-md-2">\
                     <input id="shortage_edit" class="form-control" placeholder="Shortage" type="text" required>\
                 </div>\
+                <div class="col-md-2">\
+                    <input id="place_edit" class="form-control" placeholder="Place" type="text" required>\
+                </div>\
+                <div class="col-md-2">\
+                    <select id="open_edit" class="form-control" required>\
+                        <option>PACK</option>\
+                        <option>OPEN</option>\
+                    </select>\
+                </div>\
             </div>\
-            <br>\
+       <br>\
             <button class="btn btn-lg btn-primary btn-block btn-signin" type="submit">Edit Given Entry</button>\
         </form>\
-    </div>\
-    <div id="hiddenElement" style="display: none;">\
     </div>';
 
     $.ajax({
         type: 'POST',
         url: '/editPurchase',
         data: {
-            bill: $('#bill_e').val(),
-            bale: $('#bale_e').val(),
-            party_quality: $('#party_quality_e').val(),
+            bill: bill_no_to_edit,
+            bale: $('#bale_options_edit').val(),
             csrfmiddlewaretoken: csrftoken
         },
         success: function (data) {
@@ -498,7 +579,8 @@ $(document).on('submit', '#formEdit', function (e) {
             document.getElementById('taka_edit').value = context.taka;
             document.getElementById('mts_edit').value = context.mts;
             document.getElementById('shortage_edit').value = context.shortage;
-            document.getElementById('hiddenElement').innerText = context.id;
+            document.getElementById('design_edit').value = context.design;
+            id_to_edit = context.id;
 
         },
         error: function (xhr) {
@@ -529,6 +611,7 @@ $(document).on('submit', '#formEdit', function (e) {
 
 $(document).on('submit', '#formToBeEdited', function (e) {
     e.preventDefault();
+    console.log(id_to_edit);
     swal({
         title: "This Entry will be Edited permanently!",
         text: "Are you sure to proceed?",
@@ -539,7 +622,6 @@ $(document).on('submit', '#formToBeEdited', function (e) {
         .then((isConfirm) => {
             if (isConfirm) {
                 var ele = document.getElementById('purchasePage');
-                var ids = document.getElementById('hiddenElement').innerHTML;
                 var csrftoken = getCookie('csrftoken');
                 $.ajax({
                     type: 'POST',
@@ -557,7 +639,8 @@ $(document).on('submit', '#formToBeEdited', function (e) {
                         taka: $('#taka_edit').val(),
                         mts: $('#mts_edit').val(),
                         shortage: $('#shortage_edit').val(),
-                        id: ids,
+                        design:$('#design_edit').val(),
+                        id: id_to_edit,
                         csrfmiddlewaretoken: csrftoken
                     },
                     success: function (data) {

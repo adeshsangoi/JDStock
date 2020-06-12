@@ -3,6 +3,7 @@ import json
 from django.http import HttpResponse
 from django.shortcuts import render
 from .models import *
+from django.views.decorators.csrf import csrf_exempt
 
 
 def index(request):
@@ -13,6 +14,7 @@ def purchase(request):
     return render(request, 'jd/purchase.html')
 
 
+@csrf_exempt
 def addPurchase(request):
     if request.method == "POST":
         data = json.loads(request.POST['dataArray'])
@@ -23,34 +25,49 @@ def addPurchase(request):
             bale_r = entry[0]
             party_quality_r = entry[1]
             our_quality_r = entry[2]
-            hsn_r = entry[3]
-            taka_r = entry[4]
-            mts_r = entry[5]
-            shortage_r = entry[6]
-            place_r = entry[7]
-            open_r = entry[8]
+            design_r = entry[3]
+            hsn_r = entry[4]
+            taka_r = entry[5]
+            mts_r = entry[6]
+            shortage_r = entry[7]
+            place_r = entry[8]
+            open_r = entry[9]
 
             obj = Purchase(date=date_r, place=place_r, open=open_r, bill_no=bill_r, bale_no=bale_r, party_name=party_r,
-                         party_quality_name=party_quality_r, our_quality_name=our_quality_r, hsn_code=hsn_r,
-                         taka=taka_r,
-                         mts=mts_r, shortage=shortage_r)
+                           party_quality_name=party_quality_r, our_quality_name=our_quality_r, hsn_code=hsn_r,
+                           taka=taka_r, mts=mts_r, shortage=shortage_r,design=design_r)
             obj.save()
 
         return HttpResponse('')
 
 
-def deletePurchase(request):
+@csrf_exempt
+def PurchaseBale(request):
     if request.method == "POST":
         bill_r = request.POST['bill']
-        bale_r = request.POST['bale']
-        party_quality_r = request.POST['party_quality']
+        objs = Purchase.objects.filter(bill_no=bill_r)
+        lst = []
+        for item in objs:
+            lst.append(item.bale_no)
 
-        d = Purchase.objects.get(bill_no=bill_r, bale_no=bale_r, party_quality_name=party_quality_r)
-        context = json.dumps(PurchaseSerializer(d).data)
+        context = json.dumps(lst)
 
         return HttpResponse(context)
 
 
+@csrf_exempt
+def deletePurchase(request):
+    if request.method == "POST":
+        bill_r = request.POST['bill']
+        bale_r = request.POST['bale']
+
+        d = Purchase.objects.get(bill_no=bill_r, bale_no=bale_r)
+
+        context = json.dumps(PurchaseSerializer(d).data)
+        return HttpResponse(context)
+
+
+@csrf_exempt
 def deleteGivenPurchase(request):
     if request.method == "POST":
         bill_r = request.POST['bill']
@@ -63,19 +80,20 @@ def deleteGivenPurchase(request):
         return HttpResponse()
 
 
+@csrf_exempt
 def editPurchase(request):
     if request.method == "POST":
         bill_r = request.POST['bill']
         bale_r = request.POST['bale']
-        party_quality_r = request.POST['party_quality']
 
-        d = Purchase.objects.get(bill_no=bill_r, bale_no=bale_r, party_quality_name=party_quality_r)
+        d = Purchase.objects.get(bill_no=bill_r, bale_no=bale_r)
         context = json.dumps(PurchaseSerializer(d).data)
         context = context[:len(context) - 1]
         context = context + ", " + '"id": ' + str(d.id) + '}'
         return HttpResponse(context)
 
 
+@csrf_exempt
 def editGivenPurchase(request):
     if request.method == "POST":
         id_r = int(request.POST['id'])
@@ -91,6 +109,7 @@ def editGivenPurchase(request):
         taka_r = request.POST['taka']
         mts_r = request.POST['mts']
         shortage_r = request.POST['shortage']
+        design_r = request.POST['design']
 
         d = Purchase.objects.get(id=id_r)
         d.date = date_r
@@ -105,6 +124,8 @@ def editGivenPurchase(request):
         d.taka = taka_r
         d.mts = mts_r
         d.shortage = shortage_r
+        d.design = design_r
+
         d.save()
 
         return HttpResponse()
