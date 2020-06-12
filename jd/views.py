@@ -145,3 +145,15 @@ def gatherData(request):
         dict[item.bale_no].append(item.our_quality_name)
 
     return HttpResponse(json.dumps(dict))
+
+
+@csrf_exempt
+def getBillBaleMap(request):
+    mydata = Purchase.objects.all()
+    dict = {}
+    for item in mydata:
+        dict[item.bill_no] = []
+    for item in mydata:
+        dict[item.bill_no].append(item.bale_no)
+
+    return HttpResponse(json.dumps(dict))

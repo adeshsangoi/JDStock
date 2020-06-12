@@ -2,6 +2,7 @@ var numberOfEntries = 0;
 var bill_no_to_delete = 0;
 var bill_no_to_edit = 0;
 var id_to_edit = 0;
+var billbaleMap;
 var addboxdata =
     '<hr style="margin-left: -24px;margin-right: -24px;">\
         <div>\
@@ -185,73 +186,57 @@ $(document).on('submit', '#formAdd', function (e) {
 
 function deletePurchase() {
     var purchasePage = document.getElementById('purchasePage');
-    purchasePage.innerHTML = '<br> <br> <br>\
-    <form id="delete-head">\
-    <h6 style="font-family: sans-serif">Enter Bill Number to be Deleted</h6>\
-    <div class="row">\
-        <div class="col-md-2">\
-            <input id="bill_no_for_delete" class="form-control" placeholder="Bill Number" min="1" type="number" required>\
-        </div>\
-        <div class="col-md-2">\
-            <button type="submit" class="btn btn-secondary">Submit</button>\
-        </div>\
-    </div>\
-    </form>'
-
-}
-
-$(document).on('submit', '#delete-head', function (e) {
-    e.preventDefault();
-    bill_no_to_delete = document.getElementById('bill_no_for_delete').value;
-    var purchasePage = document.getElementById('purchasePage');
-    var bale_form = '<br> <br> \
-    <form id="formDelete">\
-    <h6 style="font-family: sans-serif">Choose Bale Number to be Deleted</h6>\
-    <div class="row">\
-        <div class="col-md-2">\
-                    <select id="bale_options_delete" class="form-control" required>\
-                    </select>\
-        </div>\
-        <div class="col-md-2">\
-            <button type="submit" class="btn btn-secondary">Submit</button>\
-        </div>\
-    </div>\
-    </form>'
-
-
     var csrftoken = getCookie('csrftoken');
 
-
+    purchasePage.innerHTML = '<br> <br> <br>\
+    <form id="formDelete">\
+    <h6 style="font-family: sans-serif">Enter Bill Number &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;\
+    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Choose Bale Number</h6>\
+    <div class="row">\
+        <div class="col-md-2">\
+            <input id="bill_no_for_delete" onchange="billBaleMapping()" class="form-control" placeholder="Bill Number" min="1" type="number" required>\
+        </div>\
+        <div class="col-md-2">\
+                <select id="bale_options_delete" class="form-control" required>\
+                 </select>\
+        </div>\
+        <div class="col-md-2">\
+            <button type="submit" class="btn btn-secondary">Submit</button>\
+        </div>\
+    </div>\
+    </form>'
     $.ajax({
         type: 'POST',
-        url: '/PurchaseBale',
+        url: '/getBillBaleMap',
         data: {
-            bill: bill_no_to_delete,
             csrfmiddlewaretoken: csrftoken
         },
         success: function (data) {
-            var context = JSON.parse(data);
-            if (context.length >= 1) {
-                if (document.getElementById('bale_options_delete') == null) {
-                    purchasePage.innerHTML = purchasePage.innerHTML + bale_form;
-                }
-                document.getElementById('bill_no_for_delete').value = bill_no_to_delete;
+            billbaleMap = JSON.parse(data);
+        }
+    })
 
-                var option_field = ''
-                for (var i = 0; i < context.length; i++) {
-                    option_field = option_field + '<option>' + context[i].toString() + '</option>'
-                }
-                document.getElementById('bale_options_delete').innerHTML = option_field;
-            } else {
-                swal({
+}
+
+function billBaleMapping() {
+    document.getElementById('bale_options_delete').innerHTML = '';
+    bill_id = document.getElementById('bill_no_for_delete').value;
+    if(billbaleMap[bill_id] != null) {
+        var arr = billbaleMap[bill_id];
+        var option_field = '';
+        for (var j = 0; j < arr.length; j++) {
+            option_field = option_field + '<option>' + arr[j].toString() + '</option>'
+        }
+        document.getElementById('bale_options_delete').innerHTML = option_field;
+    }
+    else{
+         swal({
                     icon: 'error',
                     title: 'Error',
-                    text: 'No Entry Found with Bill Number = ' + bill_no_to_delete.toString(),
+                    text: 'No Entry Found with Bill Number = ' + bill_id,
                 })
-            }
-        },
-    })
-})
+    }
+}
 
 
 $(document).on('submit', '#formDelete', function (e) {
@@ -318,7 +303,7 @@ $(document).on('submit', '#formDelete', function (e) {
         type: 'POST',
         url: '/deletePurchase',
         data: {
-            bill: bill_no_to_delete,
+            bill: $('#bill_no_for_delete').val(),
             bale: $('#bale_options_delete').val(),
             csrfmiddlewaretoken: csrftoken
         },
@@ -407,75 +392,65 @@ $(document).on('submit', '#formToBeDeleted', function (e) {
 
 
 
+
+
+
+
+
+
+
 function editPurchase() {
+    var csrftoken = getCookie('csrftoken');
     var purchasePage = document.getElementById('purchasePage');
     purchasePage.innerHTML = '<br> <br> <br>\
-    <form id="edit-head">\
-    <h6 style="font-family: sans-serif">Enter Bill Number to be Edited</h6>\
-    <div class="row">\
-        <div class="col-md-2">\
-            <input id="bill_no_for_edit" class="form-control" placeholder="Bill Number" min="1" type="number" required>\
-        </div>\
-        <div class="col-md-2">\
-            <button type="submit" class="btn btn-secondary">Submit</button>\
-        </div>\
-    </div>\
-    </form>'
-
-}
-
-$(document).on('submit', '#edit-head', function (e) {
-    e.preventDefault();
-    bill_no_to_edit = document.getElementById('bill_no_for_edit').value;
-    var purchasePage = document.getElementById('purchasePage');
-    var bale_form = '<br> <br> \
     <form id="formEdit">\
-    <h6 style="font-family: sans-serif">Choose Bale Number to be Edited</h6>\
+    <h6 style="font-family: sans-serif">Enter Bill Number &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;\
+    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Choose Bale Number</h6>\
     <div class="row">\
         <div class="col-md-2">\
-                    <select id="bale_options_edit" class="form-control" required>\
-                    </select>\
+            <input id="bill_no_for_edit" onchange="billBaleMapping2()" class="form-control" placeholder="Bill Number" min="1" type="number" required>\
+        </div>\
+        <div class="col-md-2">\
+                <select id="bale_options_edit" class="form-control" required>\
+                 </select>\
         </div>\
         <div class="col-md-2">\
             <button type="submit" class="btn btn-secondary">Submit</button>\
         </div>\
     </div>\
     </form>'
-
-
-    var csrftoken = getCookie('csrftoken');
-
-
     $.ajax({
         type: 'POST',
-        url: '/PurchaseBale',
+        url: '/getBillBaleMap',
         data: {
-            bill: bill_no_to_edit,
             csrfmiddlewaretoken: csrftoken
         },
         success: function (data) {
-            var context = JSON.parse(data);
-            if (context.length >= 1) {
-                if (document.getElementById('bale_options_edit') == null) {
-                    purchasePage.innerHTML = purchasePage.innerHTML + bale_form;
-                }
-                document.getElementById('bill_no_for_edit').value = bill_no_to_edit;
+            billbaleMap = JSON.parse(data);
+        }
+    })
 
-                var option_field = ''
-                for (var i = 0; i < context.length; i++) {
-                    option_field = option_field + '<option>' + context[i].toString() + '</option>'
-                }
-                document.getElementById('bale_options_edit').innerHTML = option_field;
-            } else {
-                swal({
+}
+
+function billBaleMapping2() {
+    document.getElementById('bale_options_edit').innerHTML = '';
+    bill_id = document.getElementById('bill_no_for_edit').value;
+    if(billbaleMap[bill_id] != null) {
+        var arr = billbaleMap[bill_id];
+        var option_field = '';
+        for (var j = 0; j < arr.length; j++) {
+            option_field = option_field + '<option>' + arr[j].toString() + '</option>'
+        }
+        document.getElementById('bale_options_edit').innerHTML = option_field;
+    }
+    else{
+         swal({
                     icon: 'error',
                     title: 'Error',
-                    text: 'No Entry Found with Bill Number = ' + bill_no_to_edit.toString(),
+                    text: 'No Entry Found with Bill Number = ' + bill_id,
                 })
-            }
-        },
-    })
-})
+    }
+}
 
 
 
@@ -495,7 +470,7 @@ $(document).on('submit', '#formEdit', function (e) {
                     <input id="bill_edit" class="form-control" placeholder="Bill Number" type="number" required>\
                 </div>\
                 <div class="col-md-4">\
-                    <input id="party_edit" class="form-control" placeholder="Party Name" type="text" required>\
+                    <input id="party_edit" class="form-control" placeholder="Party Name" oninput="this.value = this.value.toUpperCase()" type="text" required>\
                 </div>\
             </div>\
             <br>\
@@ -504,32 +479,32 @@ $(document).on('submit', '#formEdit', function (e) {
                     <input id="bale_edit" class="form-control" placeholder="Bale Number" type="number" required>\
                 </div>\
                 <div class="col-md-3">\
-                    <input id="party_quality_edit" class="form-control" placeholder="Party Quality Name" type="text"\
+                    <input id="party_quality_edit" class="form-control" oninput="this.value = this.value.toUpperCase()" placeholder="Party Quality Name" type="text"\
                            required>\
                 </div>\
                 <div class="col-md-3">\
-                    <input id="our_quality_edit" class="form-control" placeholder="Our Quality Name" type="text" required>\
+                    <input id="our_quality_edit" class="form-control" placeholder="Our Quality Name" oninput="this.value = this.value.toUpperCase()" type="text" required>\
                 </div>\
                 <div class="col-md-3">\
-                    <input id="design_edit" class="form-control" placeholder="Design Number" type="text">\
+                    <input id="design_edit" class="form-control" oninput="this.value = this.value.toUpperCase()" placeholder="Design Number" type="text">\
                 </div>\
              </div>\
              <br>\
              <div class="row">\
                  <div class="col-md-2">\
-                    <input id="hsn_edit" class="form-control" placeholder="HSN Code" type="text" required>\
+                    <input id="hsn_edit" class="form-control" placeholder="HSN Code" oninput="this.value = this.value.toUpperCase()" type="text" required>\
                  </div>\
                  <div class="col-md-2">\
                     <input id="taka_edit" class="form-control" placeholder="Number of Taka" type="number" required>\
                 </div>\
                 <div class="col-md-2">\
-                    <input id="mts_edit" class="form-control" placeholder="Total Metres" type="text" required>\
+                    <input id="mts_edit" class="form-control" placeholder="Total Metres" oninput="this.value = this.value.toUpperCase()" type="text" required>\
                 </div>\
                 <div class="col-md-2">\
-                    <input id="shortage_edit" class="form-control" placeholder="Shortage" type="text" required>\
+                    <input id="shortage_edit" class="form-control" placeholder="Shortage" oninput="this.value = this.value.toUpperCase()" type="text" required>\
                 </div>\
                 <div class="col-md-2">\
-                    <input id="place_edit" class="form-control" placeholder="Place" type="text" required>\
+                    <input id="place_edit" class="form-control" placeholder="Place" oninput="this.value = this.value.toUpperCase()" type="text" required>\
                 </div>\
                 <div class="col-md-2">\
                     <select id="open_edit" class="form-control" required>\
@@ -547,7 +522,7 @@ $(document).on('submit', '#formEdit', function (e) {
         type: 'POST',
         url: '/editPurchase',
         data: {
-            bill: bill_no_to_edit,
+            bill: $('#bill_no_for_edit').val(),
             bale: $('#bale_options_edit').val(),
             csrfmiddlewaretoken: csrftoken
         },
@@ -598,7 +573,6 @@ $(document).on('submit', '#formEdit', function (e) {
 
 $(document).on('submit', '#formToBeEdited', function (e) {
     e.preventDefault();
-    console.log(id_to_edit);
     swal({
         title: "This Entry will be Edited permanently!",
         text: "Are you sure to proceed?",
@@ -626,7 +600,7 @@ $(document).on('submit', '#formToBeEdited', function (e) {
                         taka: $('#taka_edit').val(),
                         mts: $('#mts_edit').val(),
                         shortage: $('#shortage_edit').val(),
-                        design:$('#design_edit').val(),
+                        design: $('#design_edit').val(),
                         id: id_to_edit,
                         csrfmiddlewaretoken: csrftoken
                     },

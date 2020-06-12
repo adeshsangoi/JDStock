@@ -6,7 +6,7 @@ var addboxdata =
             <h6 id="headerAdd" style="font-family: sans-serif;font-size:12px; text-transform: uppercase;padding-left: 5px;"></h6>\
         </div>\
         <div class="row">\
-                 <div class="col-md-2">\
+                 <div class="col-md-3">\
                     <input id="bale_add" onchange="getProduct()" class="form-control" placeholder="Bale Number" type="number" required>\
                 </div>\
                 <div class="col-md-3">\
@@ -14,12 +14,9 @@ var addboxdata =
                     </select>\
                 </div>\
                 <div class="col-md-3">\
-                    <input id="design_add" class="form-control" placeholder="Design No." oninput="this.value = this.value.toUpperCase()" type="text">\
-                </div>\
-                <div class="col-md-2">\
                     <input id="taka_add" class="form-control" placeholder="Taka" oninput="this.value = this.value.toUpperCase()" type="number" required>\
                 </div>\
-                <div class="col-md-2">\
+                <div class="col-md-3">\
                     <input id="mts_add" class="form-control" placeholder="Metres" oninput="this.value = this.value.toUpperCase()" type="text" required>\
                 </div>\
          </div>';
@@ -97,7 +94,6 @@ $(document).on('submit', '#add-head', function (e) {
         document.getElementById("headerAdd").setAttribute("id", "headerAdd " + i.toString());
         document.getElementById("bale_add").setAttribute("id", "bale_add" + i.toString());
         document.getElementById("our_quality_add").setAttribute("id", "our_quality_add" + i.toString());
-        document.getElementById("design_add").setAttribute("id", "design_add" + i.toString());
         document.getElementById("taka_add").setAttribute("id", "taka_add" + i.toString());
         document.getElementById("mts_add").setAttribute("id", "mts_add" + i.toString());
     }
@@ -109,9 +105,7 @@ $(document).on('submit', '#add-head', function (e) {
             csrfmiddlewaretoken: csrftoken
         },
         success: function (data) {
-            // console.log(data)
             purchaseData = JSON.parse(data);
-            // console.log(purchaseData[0]);
         },
         error: function (data) {
             swal("Error", ", Your entry is Added!", "success");
