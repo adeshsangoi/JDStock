@@ -148,6 +148,19 @@ def getBaleProdMap(request):
 
 
 @csrf_exempt
+def getBaleProdMapSale(request):
+    mydata = Sale.objects.all()
+    dict = {}
+    for item in mydata:
+        dict[item.bale_no] = []
+    for item in mydata:
+        if item.our_quality_name not in dict[item.bale_no]:
+            dict[item.bale_no].append(item.our_quality_name)
+
+    return HttpResponse(json.dumps(dict))
+
+
+@csrf_exempt
 def getBillBaleMap(request):
     mydata = Purchase.objects.all()
     dict = {}
@@ -176,3 +189,34 @@ def addSale(request):
         obj.save()
 
     return HttpResponse('')
+
+
+@csrf_exempt
+def editSale(request):
+    if request.method == "POST":
+        bale_r = request.POST['bale']
+        our_quality_name_r = request.POST['prod']
+
+        d = Sale.objects.get(bale_no=bale_r, our_quality_name=our_quality_name_r)
+        context = json.dumps(SaleSerializer(d).data)
+        context = context[:len(context) - 1]
+        context = context + ", " + '"id": ' + str(d.id) + '}'
+        return HttpResponse(context)
+
+
+@csrf_exempt
+def deleteSale(request):
+    if request.method == "POST":
+        bale_r = request.POST['bale']
+        our_quality_name_r = request.POST['prod']
+        obj = Sale.objects.filter(bale_no=bale_r, our_quality_name=our_quality_name_r)
+        lst = []
+        for item in obj:
+            context = json.dumps(SaleSerializer(item).data)
+            context = context[:len(context) - 1]
+            context = context + ", " + '"id": ' + str(item.id) + '}'
+
+            lst.append(context)
+
+        mydata = json.dumps(lst)
+        return HttpResponse(mydata)

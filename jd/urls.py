@@ -12,6 +12,10 @@ urlpatterns = [
     path('editGivenPurchase', views.editGivenPurchase, name="editGivenPurchase"),
     path('sale', views.sale, name="sale"),
     path('getBaleProdMap',views.getBaleProdMap,name="getBaleProdMap"),
+    path('getBaleProdMapSale', views.getBaleProdMapSale, name="getBaleProdMapSale"),
     path('getBillBaleMap', views.getBillBaleMap, name="getBillBaleMap"),
     path('addSale', views.addSale, name="addSale"),
+    path('editSale', views.editSale, name="editSale"),
+    path('deleteSale', views.deleteSale, name="deleteSale"),
+
 ]

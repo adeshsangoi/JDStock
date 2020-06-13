@@ -1,5 +1,6 @@
 var numberOfEntries = 3;
 var baleProdMap;
+var id_to_edit ;
 
 function getCookie(name) {
     var cookieValue = null;
@@ -187,7 +188,249 @@ $(document).on('submit', '#formAdd', function (e) {
 
 
 
+function editSale() {
+    var csrftoken = getCookie('csrftoken');
+    var salesPage = document.getElementById('salesPage');
+    salesPage.innerHTML = '<br> <br> <br>\
+    <form id="formEdit">\
+    <h6 style="font-family: sans-serif">Enter Bale Number &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;\
+    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Choose Product</h6>\
+    <div class="row">\
+        <div class="col-md-2">\
+            <input id="bale_no_for_edit" onchange="baleProdMappingEdit()" class="form-control" placeholder="Bale Number" min="1" type="number" required>\
+        </div>\
+        <div class="col-md-2">\
+                <select id="product_options_edit" class="form-control" required>\
+                 </select>\
+        </div>\
+        <div class="col-md-2">\
+            <button type="submit" class="btn btn-secondary">Submit</button>\
+        </div>\
+    </div>\
+    </form>'
+    $.ajax({
+        type: 'POST',
+        url: '/getBaleProdMapSale',
+        data: {
+            csrfmiddlewaretoken: csrftoken
+        },
+        success: function (data) {
+            baleProdMap = JSON.parse(data);
+        }
+    })
+
+}
 
 
+function baleProdMappingEdit() {
+    document.getElementById('product_options_edit').innerHTML = '';
+    bale_id = document.getElementById('bale_no_for_edit').value;
+    if(bale_id === ""){
+        var doNothing = 0;
+    }
+    else if(baleProdMap[bale_id] != null) {
+        var arr = baleProdMap[bale_id];
+        var option_field = '';
+        for (var j = 0; j < arr.length; j++) {
+            option_field = option_field + '<option>' + arr[j].toString() + '</option>'
+        }
+        document.getElementById('product_options_edit').innerHTML = option_field;
+    }
+    else{
+         swal({
+                    icon: 'error',
+                    title: 'Error',
+                    text: 'No Entry Found with Bale Number = ' + bale_id,
+                })
+    }
+}
+
+
+//
+//
+//
+// $(document).on('submit', '#formEdit', function (e) {
+//     e.preventDefault();
+//     var ele = document.getElementById('salesPage');
+//
+//     var csrftoken = getCookie('csrftoken');
+//     var temp =
+//         '<div class="card card-container">\
+//         <form class="form-signin" id="formToBeEdited">\
+//             <div class="row">\
+//                 <div class="col-md-4">\
+//                     <input id="date_edit" class="form-control" placeholder="Date" type="date" required>\
+//                 </div>\
+//                 <div class="col-md-4">\
+//                     <input id="party_edit" class="form-control" placeholder="Party Name" oninput="this.value = this.value.toUpperCase()" type="text" required>\
+//                 </div>\
+//             </div>\
+//             <br>\
+//              <div class="row">\
+//                 <div class="col-md-2">\
+//                     <input id="bale_edit" class="form-control" placeholder="Bale Number" type="number" required>\
+//                 </div>\
+//                 <div class="col-md-3">\
+//                     <input id="our_quality_edit" class="form-control" placeholder="Our Quality Name" oninput="this.value = this.value.toUpperCase()" type="text" required>\
+//                 </div>\
+//                 <div class="col-md-3">\
+//                     <input id="design_edit" class="form-control" oninput="this.value = this.value.toUpperCase()" placeholder="Design Number" type="text">\
+//                 </div>\
+//                 <div class="col-md-2">\
+//                     <input id="taka_edit" class="form-control" placeholder="Number of Taka" type="number" required>\
+//                 </div>\
+//                 <div class="col-md-2">\
+//                     <input id="mts_edit" class="form-control" placeholder="Total Metres" oninput="this.value = this.value.toUpperCase()" type="text" required>\
+//                 </div>\
+//             </div>\
+//        <br>\
+//             <button class="btn btn-lg btn-primary btn-block btn-signin" type="submit">Edit Given Entry</button>\
+//         </form>\
+//     </div>';
+//
+//     $.ajax({
+//         type: 'POST',
+//         url: '/editSale',
+//         data: {
+//             bale: $('#bale_no_for_edit').val(),
+//             prod: $('#product_options_edit').val(),
+//             csrfmiddlewaretoken: csrftoken
+//         },
+//         success: function (data) {
+//             var context = JSON.parse(data)
+//             ele.innerHTML = temp;
+//             document.getElementById('date_edit').value = context.date;
+//             document.getElementById('bale_edit').value = context.bale_no;
+//             document.getElementById('party_edit').value = context.party_name;
+//             document.getElementById('our_quality_edit').value = context.our_quality_name;
+//             document.getElementById('taka_edit').value = context.taka;
+//             document.getElementById('mts_edit').value = context.mts;
+//             document.getElementById('design_edit').value = context.design;
+//             id_to_edit = context.id;
+//
+//         },
+//         error: function (xhr) {
+//             var error_message = xhr.responseText.split(" ")[0]
+//             console.log(error_message)
+//             if (error_message === "MultipleObjectsReturned") {
+//                 swal({
+//                     icon: 'error',
+//                     title: 'Error',
+//                     text: 'More than 1 Entry Found with given details',
+//                 })
+//             } else if (error_message === "DoesNotExist") {
+//                 swal({
+//                     icon: 'error',
+//                     title: 'Error',
+//                     text: 'No Entry Found with given details',
+//                 })
+//             } else {
+//                 swal({
+//                     icon: 'error',
+//                     title: 'Error',
+//                     text: 'Some Unknown Error Occured',
+//                 })
+//             }
+//         }
+//     })
+// })
+//
+
+
+
+function deleteSale() {
+    var csrftoken = getCookie('csrftoken');
+    var salesPage = document.getElementById('salesPage');
+    salesPage.innerHTML = '<br> <br> <br>\
+    <form id="formDelete">\
+    <h6 style="font-family: sans-serif">Enter Bale Number &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;\
+    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Choose Product</h6>\
+    <div class="row">\
+        <div class="col-md-2">\
+            <input id="bale_no_for_delete" onchange="baleProdMappingDelete()" class="form-control" placeholder="Bale Number" min="1" type="number" required>\
+        </div>\
+        <div class="col-md-2">\
+                <select id="product_options_delete" class="form-control" required>\
+                 </select>\
+        </div>\
+        <div class="col-md-2">\
+            <button type="submit" class="btn btn-secondary">Submit</button>\
+        </div>\
+    </div>\
+    </form>'
+    $.ajax({
+        type: 'POST',
+        url: '/getBaleProdMapSale',
+        data: {
+            csrfmiddlewaretoken: csrftoken
+        },
+        success: function (data) {
+            baleProdMap = JSON.parse(data);
+        }
+    })
+
+}
+
+
+function baleProdMappingDelete() {
+    document.getElementById('product_options_delete').innerHTML = '';
+    bale_id = document.getElementById('bale_no_for_delete').value;
+    if(bale_id === ""){
+        var doNothing = 0;
+    }
+    else if(baleProdMap[bale_id] != null) {
+        var arr = baleProdMap[bale_id];
+        var option_field = '';
+        for (var j = 0; j < arr.length; j++) {
+            option_field = option_field + '<option>' + arr[j].toString() + '</option>'
+        }
+        document.getElementById('product_options_delete').innerHTML = option_field;
+    }
+    else{
+         swal({
+                    icon: 'error',
+                    title: 'Error',
+                    text: 'No Entry Found with Bale Number = ' + bale_id,
+                })
+    }
+}
+
+$(document).on('submit', '#formDelete', function (e) {
+    e.preventDefault();
+    var salesPage = document.getElementById('salesPage');
+    var starts = '<table>\
+              <tr>\
+              <th>Bale</th>\
+               <th>Prod</th>\
+              <th>Taka</th>\
+             </tr>';
+    var ends = '</table>';
+    var csrftoken = getCookie('csrftoken');
+    $.ajax({
+        type: 'POST',
+        url: '/deleteSale',
+        data: {
+            bale: $('#bale_no_for_delete').val(),
+            prod: $('#product_options_delete').val(),
+            csrfmiddlewaretoken: csrftoken
+        },
+        success: function (data) {
+            dat = JSON.parse(data);
+            for(var i=0;i<dat.length;i++) {
+                dat[i] = JSON.parse(dat[i])
+            }
+
+            console.log(dat);
+            var tmp = '';
+            for(var i=0;i<dat.length;i++){
+                tmp = tmp + '<tr>'
+                tmp = tmp + '<td>' + dat[i].bale_no.toString() + '</td>'
+                tmp = tmp + '<td>' + dat[i].our_quality_name.toString() + '</td>'
+                tmp = tmp + '<td>' + dat[i].taka.toString() + '</td>' + '</tr>'
+            }
+            salesPage.innerHTML = starts + tmp + ends;
+        }
+    })
+})
 
 
