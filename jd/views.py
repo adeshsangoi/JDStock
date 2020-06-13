@@ -136,7 +136,7 @@ def editGivenPurchase(request):
 
 
 @csrf_exempt
-def gatherData(request):
+def getBaleProdMap(request):
     mydata = Purchase.objects.all()
     dict = {}
     for item in mydata:
@@ -157,3 +157,22 @@ def getBillBaleMap(request):
         dict[item.bill_no].append(item.bale_no)
 
     return HttpResponse(json.dumps(dict))
+
+
+@csrf_exempt
+def addSale(request):
+    data = json.loads(request.POST['saleDataArray'])
+    date_r = request.POST['date']
+    party_r = request.POST['party']
+    for entry in data:
+        bale_r = entry[0]
+        our_quality_r = entry[1]
+        taka_r = entry[2]
+        mts_r = entry[3]
+        design_r = Purchase.objects.get(bale_no=bale_r, our_quality_name=our_quality_r).design
+
+        obj = Sale(date=date_r, buyer_name=party_r, bale_no=bale_r, our_quality_name=our_quality_r, design=design_r,
+                   taka=taka_r, mts=mts_r)
+        obj.save()
+
+    return HttpResponse('')

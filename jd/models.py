@@ -49,6 +49,9 @@ class Sale(models.Model):
     taka = models.IntegerField()
     mts = models.FloatField()
 
+    def __str__(self):
+        return "Bale " + str(self.bale_no) + " -  " + str(self.our_quality_name) + " - " + str(self.date)
+
 
 class SaleSerializer(serializers.Serializer):
     date = serializers.DateField()

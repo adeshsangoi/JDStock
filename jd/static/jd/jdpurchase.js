@@ -221,7 +221,10 @@ function deletePurchase() {
 function billBaleMapping() {
     document.getElementById('bale_options_delete').innerHTML = '';
     bill_id = document.getElementById('bill_no_for_delete').value;
-    if(billbaleMap[bill_id] != null) {
+    if(bill_id === ""){
+        var doNothing = 0;
+    }
+    else if(billbaleMap[bill_id] != null) {
         var arr = billbaleMap[bill_id];
         var option_field = '';
         for (var j = 0; j < arr.length; j++) {
@@ -435,7 +438,10 @@ function editPurchase() {
 function billBaleMapping2() {
     document.getElementById('bale_options_edit').innerHTML = '';
     bill_id = document.getElementById('bill_no_for_edit').value;
-    if(billbaleMap[bill_id] != null) {
+    if(bill_id === ""){
+        var doNothing = 0;
+    }
+    else if(billbaleMap[bill_id] != null) {
         var arr = billbaleMap[bill_id];
         var option_field = '';
         for (var j = 0; j < arr.length; j++) {

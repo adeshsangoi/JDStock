@@ -11,7 +11,7 @@ urlpatterns = [
     path('editPurchase', views.editPurchase, name="editPurchase"),
     path('editGivenPurchase', views.editGivenPurchase, name="editGivenPurchase"),
     path('sale', views.sale, name="sale"),
-    path('gatherData',views.gatherData,name="gatherData"),
+    path('getBaleProdMap',views.getBaleProdMap,name="getBaleProdMap"),
     path('getBillBaleMap', views.getBillBaleMap, name="getBillBaleMap"),
-
+    path('addSale', views.addSale, name="addSale"),
 ]

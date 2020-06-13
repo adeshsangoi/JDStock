@@ -1,26 +1,5 @@
 var numberOfEntries = 3;
-var purchaseData;
-var addboxdata =
-    '<hr style="margin-left: -24px;margin-right: -24px;">\
-        <div>\
-            <h6 id="headerAdd" style="font-family: sans-serif;font-size:12px; text-transform: uppercase;padding-left: 5px;"></h6>\
-        </div>\
-        <div class="row">\
-                 <div class="col-md-3">\
-                    <input id="bale_add" onchange="getProduct()" class="form-control" placeholder="Bale Number" type="number" required>\
-                </div>\
-                <div class="col-md-3">\
-                    <select id="our_quality_add" class="form-control" required>\
-                    </select>\
-                </div>\
-                <div class="col-md-3">\
-                    <input id="taka_add" class="form-control" placeholder="Taka" oninput="this.value = this.value.toUpperCase()" type="number" required>\
-                </div>\
-                <div class="col-md-3">\
-                    <input id="mts_add" class="form-control" placeholder="Metres" oninput="this.value = this.value.toUpperCase()" type="text" required>\
-                </div>\
-         </div>';
-
+var baleProdMap;
 
 function getCookie(name) {
     var cookieValue = null;
@@ -58,6 +37,27 @@ $(document).on('submit', '#add-head', function (e) {
     e.preventDefault();
     var csrftoken = getCookie('csrftoken');
     var salesPage = document.getElementById('salesPage');
+    var addboxdata =
+    '<hr style="margin-left: -24px;margin-right: -24px;">\
+        <div>\
+            <h6 id="headerAdd" style="font-family: sans-serif;font-size:12px; text-transform: uppercase;padding-left: 5px;"></h6>\
+        </div>\
+        <div class="row">\
+                 <div class="col-md-3">\
+                    <input id="bale_add" onchange="getProduct()" class="form-control" placeholder="Bale Number" type="number" required>\
+                </div>\
+                <div class="col-md-3">\
+                    <select id="our_quality_add" class="form-control" required>\
+                    </select>\
+                </div>\
+                <div class="col-md-3">\
+                    <input id="taka_add" class="form-control" placeholder="Taka" oninput="this.value = this.value.toUpperCase()" type="number" required>\
+                </div>\
+                <div class="col-md-3">\
+                    <input id="mts_add" class="form-control" placeholder="Metres" oninput="this.value = this.value.toUpperCase()" type="text" required>\
+                </div>\
+         </div>';
+
     numberOfEntries = document.getElementById('entryNumber').value;
 
     salesPage.innerHTML = "";
@@ -100,12 +100,12 @@ $(document).on('submit', '#add-head', function (e) {
 
     $.ajax({
         type: 'POST',
-        url: '/gatherData',
+        url: '/getBaleProdMap',
         data: {
             csrfmiddlewaretoken: csrftoken
         },
         success: function (data) {
-            purchaseData = JSON.parse(data);
+            baleProdMap = JSON.parse(data);
         },
         error: function (data) {
             swal("Error", ", Your entry is Added!", "success");
@@ -118,18 +118,76 @@ function getProduct() {
         bale_id = "bale_add"+i.toString();
         prod_id = "our_quality_add"+i.toString();
         document.getElementById(prod_id).innerHTML = '';
-        if(document.getElementById(bale_id).value !== "") {
-            var val = document.getElementById(bale_id).value;
+        bale_id_val = document.getElementById(bale_id).value;
 
-            arr = purchaseData[val]
+        if(bale_id_val === ""){
+            var doNothing = 0
+        }
+        else if(baleProdMap[bale_id_val] != null) {
+            arr = baleProdMap[bale_id_val]
             var option_field = ''
             for (var j = 0; j < arr.length; j++) {
                 option_field = option_field + '<option>' + arr[j].toString() + '</option>'
             }
             document.getElementById(prod_id).innerHTML = option_field;
         }
+        else{
+            swal({
+                    icon: 'error',
+                    title: 'Error',
+                    text: 'No Entry Found with Bale Number = ' + document.getElementById(bale_id).value,
+                })
+        }
     }
 }
+
+
+$(document).on('submit', '#formAdd', function (e) {
+    e.preventDefault();
+    var salesPage = document.getElementById('salesPage');
+    var csrftoken = getCookie('csrftoken');
+    dataArr = new Array(numberOfEntries);
+    for (var i = 0; i < numberOfEntries; i++) {
+        dataArr[i] = [0, 0, 0, 0];
+    }
+    // console.log(dataArr);
+    for (var j = 0; j < numberOfEntries; j++) {
+        dataArr[j][0] = document.getElementById("bale_add" + j.toString()).value;
+        dataArr[j][1] = document.getElementById("our_quality_add" + j.toString()).value;
+        dataArr[j][2] = document.getElementById("taka_add" + j.toString()).value;
+        dataArr[j][3] = document.getElementById("mts_add" + j.toString()).value;
+    }
+
+    dat = JSON.stringify(dataArr);
+
+    $.ajax({
+        type: 'POST',
+        url: '/addSale',
+        data: {
+            date: $('#date_add').val(),
+            party: $('#party_add').val(),
+            'saleDataArray': dat,
+            csrfmiddlewaretoken: csrftoken
+        },
+        success: function (data) {
+            swal("Congrats!", ", Your entry is Added!", "success");
+            salesPage.innerHTML = "";
+
+        },
+        error: function (data) {
+            swal({
+                icon: 'error',
+                title: 'Error',
+                text: 'Some Unknown Error Occured',
+            })
+        }
+    })
+})
+
+
+
+
+
 
 
 
