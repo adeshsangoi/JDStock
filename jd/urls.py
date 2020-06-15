@@ -16,6 +16,7 @@ urlpatterns = [
     path('getBillBaleMap', views.getBillBaleMap, name="getBillBaleMap"),
     path('addSale', views.addSale, name="addSale"),
     path('editSale', views.editSale, name="editSale"),
+    path('editGivenSale', views.editGivenSale, name="editGivenSale"),
     path('deleteSale', views.deleteSale, name="deleteSale"),
     path('deleteGivenSale', views.deleteGivenSale, name="deleteGivenSale"),
     path('showEditEntry', views.showEditEntry, name="showEditEntry"),

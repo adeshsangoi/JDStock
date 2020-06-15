@@ -253,3 +253,40 @@ def showEditEntry(request):
         context = context[:len(context) - 1]
         context = context + ", " + '"id": ' + str(obj.id) + '}'
         return HttpResponse(context)
+
+
+@csrf_exempt
+def editGivenSale(request):
+    if request.method == "POST":
+        id_r = int(request.POST['id'][4:])
+        date_r = request.POST['date_popup']
+        buyer_r = request.POST['party_popup']
+        bale_r = request.POST['bale_popup']
+        our_quality_r = request.POST['our_quality_popup']
+        design_r = request.POST['design_popup']
+        taka_r = request.POST['taka_popup']
+        mts_r = request.POST['mts_popup']
+        bale_old = request.POST['bale']
+        quality_old = request.POST['prod']
+
+        obj = Sale.objects.get(id=id_r)
+        obj.date = date_r
+        obj.buyer_name = buyer_r
+        obj.bale_no = bale_r
+        obj.our_quality_name = our_quality_r
+        obj.design = design_r
+        obj.taka = taka_r
+        obj.mts = mts_r
+        obj.save()
+
+        ob = Sale.objects.filter(bale_no=bale_old, our_quality_name=quality_old)
+        lst = []
+        for item in ob:
+            context = json.dumps(SaleSerializer(item).data)
+            context = context[:len(context) - 1]
+            context = context + ", " + '"id": ' + str(item.id) + '}'
+
+            lst.append(context)
+
+        mydata = json.dumps(lst)
+        return HttpResponse(mydata)

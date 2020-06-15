@@ -28,8 +28,8 @@
 </div>
 
 <div class="card card-container container" id="popupEditForm">
-    <form class="form-signin" id="formAdd">
-        <button id="close" style="float: right;width: 5%;">X</button>
+    <form class="form-signin" id="popupForm">
+        <button onclick="closePopup(this.id)" id="close" style="float: right;width: 5%;">X</button>
         <br>
         <h6 style="font-family: sans-serif;text-transform: uppercase;padding-left: 5px;">DETAILS OF SELECTED ENTRY</h6>
         <div class="row">
@@ -43,21 +43,30 @@
         </div>
         <hr style="margin-left: -24px;margin-right: -24px;">
         <div class="row">
-                     <div class="col-md-3">
-                        <input id="bale_edit_popup" onchange="baleProdMappingEdit2()" class="form-control" placeholder="Bale Number" type="number" required>
-                    </div>
-                    <div class="col-md-3">
-                        <select id="our_quality_edit_popup" class="form-control" required>
-                        </select>
-                    </div>
-                    <div class="col-md-3">
-                        <input id="taka_edit_popup" class="form-control" placeholder="Taka" oninput="this.value = this.value.toUpperCase()" type="number" required>
-                    </div>
-                    <div class="col-md-3">
-                        <input id="mts_edit_popup" class="form-control" placeholder="Metres" oninput="this.value = this.value.toUpperCase()" type="text" required>
-                    </div>
-             </div>'
-        <button class="btn btn-lg btn-primary btn-block btn-signin" type="submit">Edit Entry</button>
+            <div class="col-md-3">
+                <input id="bale_edit_popup" onchange="baleProdMappingEdit2()" class="form-control"
+                       placeholder="Bale Number" type="number" required>
+            </div>
+            <div class="col-md-3">
+                <select id="our_quality_edit_popup" class="form-control" required>
+                </select>
+            </div>
+            <div class="col-md-2">
+                <input id="design_edit_popup" class="form-control" placeholder="Design"
+                       oninput="this.value = this.value.toUpperCase()" type="text" required>
+            </div>
+            <div class="col-md-2">
+                <input id="taka_edit_popup" class="form-control" placeholder="Taka"
+                       oninput="this.value = this.value.toUpperCase()" type="number" required>
+            </div>
+            <div class="col-md-2">
+                <input id="mts_edit_popup" class="form-control" placeholder="Metres"
+                       oninput="this.value = this.value.toUpperCase()" type="text" required>
+            </div>
+        </div>
+        '
+        <button class="btn btn-lg btn-primary btn-block btn-signin" id="editPopupSubmit" type="submit">Edit Entry
+        </button>
     </form>
 </div>
 
