@@ -242,3 +242,14 @@ def deleteGivenSale(request):
             lst.append(context)
         mydata = json.dumps(lst)
         return HttpResponse(mydata)
+
+
+@csrf_exempt
+def showEditEntry(request):
+    if request.method == "POST":
+        id_r = int(request.POST['id'][4:])
+        obj = Sale.objects.get(id=id_r)
+        context = json.dumps(SaleSerializer(obj).data)
+        context = context[:len(context) - 1]
+        context = context + ", " + '"id": ' + str(obj.id) + '}'
+        return HttpResponse(context)

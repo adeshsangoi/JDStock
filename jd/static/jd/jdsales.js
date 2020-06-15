@@ -315,9 +315,9 @@ function deleteGivenSaleEntry(id_to_delete) {
         text: "Are you sure to proceed?",
         icon: "warning",
         buttons: {
-                confirm: 'Yes',
-                cancel: 'No'
-            },
+            confirm: 'Yes',
+            cancel: 'No'
+        },
         dangerMode: true,
     })
         .then((isConfirm) => {
@@ -391,16 +391,6 @@ function deleteGivenSaleEntry(id_to_delete) {
 }
 
 
-
-
-
-
-
-
-
-
-
-
 function editSale() {
     var csrftoken = getCookie('csrftoken');
     var salesPage = document.getElementById('salesPage');
@@ -456,6 +446,26 @@ function baleProdMappingEdit() {
     }
 }
 
+function baleProdMappingEdit2() {
+    document.getElementById('our_quality_edit_popup').innerHTML = '';
+    bale_id = document.getElementById('bale_edit_popup').value;
+    if (bale_id === "") {
+        var doNothing = 0;
+    } else if (baleProdMap[bale_id] != null) {
+        var arr = baleProdMap[bale_id];
+        var option_field = '';
+        for (var j = 0; j < arr.length; j++) {
+            option_field = option_field + '<option>' + arr[j].toString() + '</option>'
+        }
+        document.getElementById('our_quality_edit_popup').innerHTML = option_field;
+    } else {
+        swal({
+            icon: 'error',
+            title: 'Error',
+            text: 'No Entry Found with Bale Number = ' + bale_id,
+        })
+    }
+}
 
 $(document).on('submit', '#formEdit', function (e) {
     e.preventDefault();
@@ -513,7 +523,7 @@ $(document).on('submit', '#formEdit', function (e) {
                 tmp = tmp + '<td>' + dat[i].design.toString() + '</td>';
                 tmp = tmp + '<td>' + dat[i].taka.toString() + '</td>';
                 tmp = tmp + '<td>' + dat[i].mts.toString() + '</td>';
-                tmp = tmp + '<td>' + '<button onclick="editGivenSaleEntry(this.id)"  class="btn btn-success" id="edit_btnn" style="width: 100%"> Edit </button> ' + '</td>';
+                tmp = tmp + '<td>' + '<button onclick="showGivenSaleEntry(this.id)"  class="btn btn-success" id="edit_btnn" style="width: 100%"> Edit </button> ' + '</td>';
                 tmp = tmp + '</tr>';
             }
             salesPage.innerHTML = starts + tmp + ends;
@@ -522,4 +532,46 @@ $(document).on('submit', '#formEdit', function (e) {
             }
         }
     })
+})
+
+function showGivenSaleEntry(id_to_edit) {
+    var csrftoken = getCookie('csrftoken');
+    $('#popupEditForm').show();
+    $('#salesPage').hide();
+    $('#edit-header').hide();
+
+    $.ajax({
+        type: 'POST',
+        url: '/showEditEntry',
+        data: {
+            id: id_to_edit,
+            csrfmiddlewaretoken: csrftoken
+        },
+        success: function (data) {
+            item = JSON.parse(data);
+            document.getElementById("date_edit_popup").value = item.date;
+            document.getElementById("party_edit_popup").value = item.buyer_name;
+            document.getElementById("bale_edit_popup").value = item.bale_no;
+            document.getElementById("taka_edit_popup").value = item.taka;
+            document.getElementById("mts_edit_popup").value = item.mts;
+
+            bale_id = item.bale_no;
+            var arr = baleProdMap[bale_id];
+            var option_field = '';
+            for (var j = 0; j < arr.length; j++) {
+                option_field = option_field + '<option>' + arr[j].toString() + '</option>'
+            }
+            document.getElementById('our_quality_edit_popup').innerHTML = option_field;
+
+            // console.log("")
+            document.getElementById("our_quality_edit_popup").value = item.our_quality_name;
+        }
+    })
+}
+
+
+$('#close').on('click', function () {
+    $('#popupEditForm').hide();
+    $('#salesPage').show();
+    $('#edit-header').show();
 })
