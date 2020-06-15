@@ -359,7 +359,10 @@ $(document).on('submit', '#formToBeDeleted', function (e) {
         title: "This Entry will be deleted permanently!",
         text: "Are you sure to proceed?",
         icon: "warning",
-        buttons: true,
+        buttons: {
+                confirm: 'Yes',
+                cancel: 'No'
+            },
         dangerMode: true,
     })
         .then((isConfirm) => {
@@ -583,7 +586,10 @@ $(document).on('submit', '#formToBeEdited', function (e) {
         title: "This Entry will be Edited permanently!",
         text: "Are you sure to proceed?",
         icon: "warning",
-        buttons: true,
+        buttons: {
+                confirm: 'Yes',
+                cancel: 'No'
+            },
         dangerMode: true,
     })
         .then((isConfirm) => {

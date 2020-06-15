@@ -17,5 +17,5 @@ urlpatterns = [
     path('addSale', views.addSale, name="addSale"),
     path('editSale', views.editSale, name="editSale"),
     path('deleteSale', views.deleteSale, name="deleteSale"),
-
+    path('deleteGivenSale', views.deleteGivenSale, name="deleteGivenSale"),
 ]

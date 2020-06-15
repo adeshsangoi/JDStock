@@ -220,3 +220,25 @@ def deleteSale(request):
 
         mydata = json.dumps(lst)
         return HttpResponse(mydata)
+
+
+@csrf_exempt
+def deleteGivenSale(request):
+    if request.method == "POST":
+        id_r = int(request.POST['ids'][6:])
+        d = Sale.objects.get(id=id_r)
+        d.delete()
+
+        bale_r = request.POST['bale']
+        our_quality_name_r = request.POST['prod']
+
+        obj = Sale.objects.filter(bale_no=bale_r,our_quality_name=our_quality_name_r)
+        lst = []
+        for item in obj:
+            context = json.dumps(SaleSerializer(item).data)
+            context = context[:len(context) - 1]
+            context = context + ", " + '"id": ' + str(item.id) + '}'
+
+            lst.append(context)
+        mydata = json.dumps(lst)
+        return HttpResponse(mydata)
