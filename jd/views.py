@@ -103,18 +103,22 @@ def editPurchase(request):
     if request.method == "POST":
         bill_r = request.POST['bill']
         bale_r = request.POST['bale']
+        obj = Purchase.objects.filter(bill_no=bill_r, bale_no=bale_r)
+        lst = []
+        for item in obj:
+            context = json.dumps(PurchaseSerializer(item).data)
+            context = context[:len(context) - 1]
+            context = context + ", " + '"id": ' + str(item.id) + '}'
+            lst.append(context)
 
-        d = Purchase.objects.get(bill_no=bill_r, bale_no=bale_r)
-        context = json.dumps(PurchaseSerializer(d).data)
-        context = context[:len(context) - 1]
-        context = context + ", " + '"id": ' + str(d.id) + '}'
-        return HttpResponse(context)
+        mydata = json.dumps(lst)
+        return HttpResponse(mydata)
 
 
 @csrf_exempt
 def editGivenPurchase(request):
     if request.method == "POST":
-        id_r = int(request.POST['id'])
+        id_r = int(request.POST['id'][4:])
         date_r = request.POST['date']
         place_r = request.POST['place']
         open_r = request.POST['open']
@@ -146,7 +150,19 @@ def editGivenPurchase(request):
 
         d.save()
 
-        return HttpResponse()
+        bale_old = request.POST['bale_old']
+        bill_old = request.POST['bill_old']
+
+        obj = Purchase.objects.filter(bill_no=bill_old, bale_no=bale_old)
+        lst = []
+        for item in obj:
+            context = json.dumps(PurchaseSerializer(item).data)
+            context = context[:len(context) - 1]
+            context = context + ", " + '"id": ' + str(item.id) + '}'
+            lst.append(context)
+
+        mydata = json.dumps(lst)
+        return HttpResponse(mydata)
 
 
 @csrf_exempt
@@ -181,7 +197,8 @@ def getBillBaleMap(request):
     for item in mydata:
         dict[item.bill_no] = []
     for item in mydata:
-        dict[item.bill_no].append(item.bale_no)
+        if item.bale_no not in dict[item.bill_no]:
+            dict[item.bill_no].append(item.bale_no)
 
     return HttpResponse(json.dumps(dict))
 
@@ -264,6 +281,17 @@ def showEditEntry(request):
         id_r = int(request.POST['id'][4:])
         obj = Sale.objects.get(id=id_r)
         context = json.dumps(SaleSerializer(obj).data)
+        context = context[:len(context) - 1]
+        context = context + ", " + '"id": ' + str(obj.id) + '}'
+        return HttpResponse(context)
+
+
+@csrf_exempt
+def showEditEntryPurchase(request):
+    if request.method == "POST":
+        id_r = int(request.POST['id'][4:])
+        obj = Purchase.objects.get(id=id_r)
+        context = json.dumps(PurchaseSerializer(obj).data)
         context = context[:len(context) - 1]
         context = context + ", " + '"id": ' + str(obj.id) + '}'
         return HttpResponse(context)

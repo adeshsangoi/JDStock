@@ -20,5 +20,6 @@ urlpatterns = [
     path('deleteSale', views.deleteSale, name="deleteSale"),
     path('deleteGivenSale', views.deleteGivenSale, name="deleteGivenSale"),
     path('showEditEntry', views.showEditEntry, name="showEditEntry"),
+    path('showEditEntryPurchase', views.showEditEntryPurchase, name="showEditEntryPurchase"),
 
 ]

@@ -541,9 +541,9 @@ $(document).on('submit', '#formEdit', function (e) {
 
 function showGivenSaleEntry(id_to_edit) {
     var csrftoken = getCookie('csrftoken');
-    $('#popupEditForm').show();
+    $('#popupEditFormSale').show();
     $('#salesPage').hide();
-    $('#edit-header').hide();
+    $('#sale-header').hide();
 
     $.ajax({
         type: 'POST',
@@ -581,9 +581,9 @@ function showGivenSaleEntry(id_to_edit) {
 
 function closePopup() {
     stop_closing = 2;
-    $('#popupEditForm').hide();
+    $('#popupEditFormSale').hide();
     $('#salesPage').show();
-    $('#edit-header').show();
+    $('#sale-header').show();
 }
 
 
@@ -651,9 +651,9 @@ $(document).on('submit', '#popupForm', function (e) {
                         },
                         success: function (data) {
                             dat = JSON.parse(data);
-                            $('#popupEditForm').hide();
+                            $('#popupEditFormSale').hide();
                             $('#salesPage').show();
-                            $('#edit-header').show();
+                            $('#sale-header').show();
 
                             for (var i = 0; i < dat.length; i++) {
                                 dat[i] = JSON.parse(dat[i])

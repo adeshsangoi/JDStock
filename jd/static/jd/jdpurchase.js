@@ -1,9 +1,12 @@
 var numberOfEntries = 0;
 var bill_no_del_table;
 var bale_no_del_table;
-
-var id_to_edit = 0;
+var bill_no_edit_table;
+var bale_no_edit_table;
+var id_final_edit_popup;
 var billbaleMap;
+var stop_closing = 0;
+
 var addboxdata =
     '<hr style="margin-left: -24px;margin-right: -24px;">\
         <div>\
@@ -397,10 +400,9 @@ function deleteGivenPurchaseEntry(id_to_delete) {
                         for (var i = 0; i < dat.length; i++) {
                             dat[i] = JSON.parse(dat[i])
                         }
-                        if (dat.length === 0){
+                        if (dat.length === 0) {
                             purchasePage.innerHTML = ""
-                        }
-                        else {
+                        } else {
 
                             var tmp = '';
                             for (var i = 0; i < dat.length; i++) {
@@ -494,170 +496,286 @@ function billBaleMapping2() {
 
 $(document).on('submit', '#formEdit', function (e) {
     e.preventDefault();
-    var ele = document.getElementById('purchasePage');
+    var purchasePage = document.getElementById('purchasePage');
+    bill_no_edit_table = document.getElementById("bill_no_for_edit").value;
+    bale_no_edit_table = document.getElementById("bale_options_edit").value;
 
+    var starts = '<br><br><table class="table table-striped table-bordered">\
+              <colgroup>\
+                   <col span="1" style="width: 10%;">\
+                   <col span="1" style="width: 7%;">\
+                   <col span="1" style="width: 10%;">\
+                   <col span="1" style="width: 7%;">\
+                   <col span="1" style="width: 10%;">\
+                   <col span="1" style="width: 10%;">\
+                   <col span="1" style="width: 6%;">\
+                   <col span="1" style="width: 5%;">\
+                   <col span="1" style="width: 6%;">\
+                   <col span="1" style="width: 7%;">\
+                   <col span="1" style="width: 5%;">\
+                   <col span="1" style="width: 7%;">\
+                   <col span="1" style="width: 7%;">\
+                   <col span="1" style="width: 7%;">\
+               </colgroup>\
+              <thead class="thead-dark">\
+              <tr>\
+              <th>DATE</th>\
+               <th>BILL</th>\
+              <th>PARTY</th>\
+              <th>BALE</th>\
+              <th>P. QUAL</th>\
+              <th>O. QUAL</th>\
+              <th>DESIGN</th>\
+              <th>HSN</th>\
+              <th>TAKA</th>\
+              <th>MTS</th>\
+              <th>SHORT</th>\
+              <th>PLACE</th>\
+              <th>OPEN</th>\
+              <th style="width: 50px;"></th>\
+              </tr>\
+              </thead>';
+    var ends = '</table>';
     var csrftoken = getCookie('csrftoken');
-    var temp =
-        '<div class="card card-container">\
-        <form class="form-signin" id="formToBeEdited">\
-            <div class="row">\
-                <div class="col-md-4">\
-                    <input id="date_edit" class="form-control" placeholder="Date" type="date" required>\
-                </div>\
-                <div class="col-md-4">\
-                    <input id="bill_edit" class="form-control" placeholder="Bill Number" type="number" required>\
-                </div>\
-                <div class="col-md-4">\
-                    <input id="party_edit" class="form-control" placeholder="Party Name" oninput="this.value = this.value.toUpperCase()" type="text" required>\
-                </div>\
-            </div>\
-            <br>\
-             <div class="row">\
-                <div class="col-md-3">\
-                    <input id="bale_edit" class="form-control" placeholder="Bale Number" type="number" required>\
-                </div>\
-                <div class="col-md-3">\
-                    <input id="party_quality_edit" class="form-control" oninput="this.value = this.value.toUpperCase()" placeholder="Party Quality Name" type="text"\
-                           required>\
-                </div>\
-                <div class="col-md-3">\
-                    <input id="our_quality_edit" class="form-control" placeholder="Our Quality Name" oninput="this.value = this.value.toUpperCase()" type="text" required>\
-                </div>\
-                <div class="col-md-3">\
-                    <input id="design_edit" class="form-control" oninput="this.value = this.value.toUpperCase()" placeholder="Design Number" type="text">\
-                </div>\
-             </div>\
-             <br>\
-             <div class="row">\
-                 <div class="col-md-2">\
-                    <input id="hsn_edit" class="form-control" placeholder="HSN Code" oninput="this.value = this.value.toUpperCase()" type="text" required>\
-                 </div>\
-                 <div class="col-md-2">\
-                    <input id="taka_edit" class="form-control" placeholder="Number of Taka" type="number" required>\
-                </div>\
-                <div class="col-md-2">\
-                    <input id="mts_edit" class="form-control" placeholder="Total Metres" oninput="this.value = this.value.toUpperCase()" type="text" required>\
-                </div>\
-                <div class="col-md-2">\
-                    <input id="shortage_edit" class="form-control" placeholder="Shortage" oninput="this.value = this.value.toUpperCase()" type="text" required>\
-                </div>\
-                <div class="col-md-2">\
-                    <input id="place_edit" class="form-control" placeholder="Place" oninput="this.value = this.value.toUpperCase()" type="text" required>\
-                </div>\
-                <div class="col-md-2">\
-                    <select id="open_edit" class="form-control" required>\
-                        <option>PACK</option>\
-                        <option>OPEN</option>\
-                    </select>\
-                </div>\
-            </div>\
-       <br>\
-            <button class="btn btn-lg btn-primary btn-block btn-signin" type="submit">Edit Given Entry</button>\
-        </form>\
-    </div>';
 
     $.ajax({
         type: 'POST',
         url: '/editPurchase',
         data: {
-            bill: $('#bill_no_for_edit').val(),
-            bale: $('#bale_options_edit').val(),
+            bill: bill_no_edit_table,
+            bale: bale_no_edit_table,
             csrfmiddlewaretoken: csrftoken
         },
         success: function (data) {
-            var context = JSON.parse(data)
-            ele.innerHTML = temp;
-            document.getElementById('date_edit').value = context.date;
-            document.getElementById('place_edit').value = context.place;
-            document.getElementById('open_edit').value = context.open;
-            document.getElementById('bill_edit').value = context.bill_no;
-            document.getElementById('bale_edit').value = context.bale_no;
-            document.getElementById('party_edit').value = context.party_name;
-            document.getElementById('party_quality_edit').value = context.party_quality_name;
-            document.getElementById('our_quality_edit').value = context.our_quality_name;
-            document.getElementById('hsn_edit').value = context.hsn_code;
-            document.getElementById('taka_edit').value = context.taka;
-            document.getElementById('mts_edit').value = context.mts;
-            document.getElementById('shortage_edit').value = context.shortage;
-            document.getElementById('design_edit').value = context.design;
-            id_to_edit = context.id;
+            dat = JSON.parse(data);
+            for (var i = 0; i < dat.length; i++) {
+                dat[i] = JSON.parse(dat[i])
+            }
 
-        },
-        error: function (xhr) {
-            var error_message = xhr.responseText.split(" ")[0]
-            console.log(error_message)
-            if (error_message === "MultipleObjectsReturned") {
-                swal({
-                    icon: 'error',
-                    title: 'Error',
-                    text: 'More than 1 Entry Found with given details',
-                })
-            } else if (error_message === "DoesNotExist") {
-                swal({
-                    icon: 'error',
-                    title: 'Error',
-                    text: 'No Entry Found with given details',
-                })
-            } else {
-                swal({
-                    icon: 'error',
-                    title: 'Error',
-                    text: 'Some Unknown Error Occured',
-                })
+            var tmp = '';
+            for (var i = 0; i < dat.length; i++) {
+                var arr = dat[i].date.split("-");
+                dat[i].date = arr[2] + "/" + arr[1] + "/" + arr[0];
+                tmp = tmp + '<tr>';
+                tmp = tmp + '<td>' + dat[i].date.toString() + '</td>';
+                tmp = tmp + '<td>' + dat[i].bill_no.toString() + '</td>';
+                tmp = tmp + '<td>' + dat[i].party_name.toString() + '</td>';
+                tmp = tmp + '<td>' + dat[i].bale_no.toString() + '</td>';
+                tmp = tmp + '<td>' + dat[i].party_quality_name.toString() + '</td>';
+                tmp = tmp + '<td>' + dat[i].our_quality_name.toString() + '</td>';
+                tmp = tmp + '<td>' + dat[i].design.toString() + '</td>';
+                tmp = tmp + '<td>' + dat[i].hsn_code.toString() + '</td>';
+                tmp = tmp + '<td>' + dat[i].taka.toString() + '</td>';
+                tmp = tmp + '<td>' + dat[i].mts.toString() + '</td>';
+                tmp = tmp + '<td>' + dat[i].shortage.toString() + '</td>';
+                tmp = tmp + '<td>' + dat[i].place.toString() + '</td>';
+                tmp = tmp + '<td>' + dat[i].open.toString() + '</td>';
+
+                tmp = tmp + '<td>' + '<button onclick="showGivenPurchaseEntry(this.id)"  class="btn btn-success" id="edit_btnn" style="width: 100%">Edit</button> ' + '</td>';
+                tmp = tmp + '</tr>';
+            }
+            purchasePage.innerHTML = starts + tmp + ends;
+            for (var i = 0; i < dat.length; i++) {
+                document.getElementById("edit_btnn").setAttribute("id", "edit" + dat[i].id.toString());
             }
         }
     })
 })
 
-$(document).on('submit', '#formToBeEdited', function (e) {
-    e.preventDefault();
-    swal({
-        title: "This Entry will be Edited permanently!",
-        text: "Are you sure to proceed?",
-        icon: "warning",
-        buttons: {
-            confirm: 'Yes',
-            cancel: 'No'
-        },
-        dangerMode: true,
-    })
-        .then((isConfirm) => {
-            if (isConfirm) {
-                var ele = document.getElementById('purchasePage');
-                var csrftoken = getCookie('csrftoken');
-                $.ajax({
-                    type: 'POST',
-                    url: '/editGivenPurchase',
-                    data: {
-                        date: $('#date_edit').val(),
-                        place: $('#place_edit').val(),
-                        open: $('#open_edit').val(),
-                        bill: $('#bill_edit').val(),
-                        bale: $('#bale_edit').val(),
-                        party: $('#party_edit').val(),
-                        party_quality: $('#party_quality_edit').val(),
-                        our_quality: $('#our_quality_edit').val(),
-                        hsn: $('#hsn_edit').val(),
-                        taka: $('#taka_edit').val(),
-                        mts: $('#mts_edit').val(),
-                        shortage: $('#shortage_edit').val(),
-                        design: $('#design_edit').val(),
-                        id: id_to_edit,
-                        csrfmiddlewaretoken: csrftoken
-                    },
-                    success: function (data) {
-                        swal("Entry Edited!", "The changes have been made", "success");
-                        ele.innerHTML = ''
-                    },
-                    error: function (data) {
-                        swal({
-                            icon: 'error',
-                            title: 'Error',
-                            text: 'Some Unknown Error Occured',
-                        })
-                    }
-                })
+function showGivenPurchaseEntry(id_to_edit) {
+    var csrftoken = getCookie('csrftoken');
+    $('#popupEditFormPurchase').show();
+    $('#purchasePage').hide();
+    $('#purchase-header').hide();
 
+    $.ajax({
+        type: 'POST',
+        url: '/showEditEntryPurchase',
+        data: {
+            id: id_to_edit,
+            csrfmiddlewaretoken: csrftoken
+        },
+        success: function (data) {
+            item = JSON.parse(data);
+            document.getElementById("date_edit_popup").value = item.date;
+            document.getElementById("bill_edit_popup").value = item.bill_no;
+            document.getElementById("party_edit_popup").value = item.party_name;
+            document.getElementById("party_quality_edit_popup").value = item.party_quality_name;
+            document.getElementById("our_quality_edit_popup").value = item.our_quality_name;
+            document.getElementById("design_edit_popup").value = item.design;
+            document.getElementById("hsn_edit_popup").value = item.hsn_code;
+            document.getElementById("taka_edit_popup").value = item.taka;
+            document.getElementById("mts_edit_popup").value = item.mts;
+            document.getElementById("shortage_edit_popup").value = item.shortage;
+            document.getElementById("place_edit_popup").value = item.place;
+            document.getElementById("open_edit_popup").value = item.open;
+
+
+            bill_id = item.bill_no;
+            var arr = billbaleMap[bill_id];
+            var option_field = '';
+            for (var j = 0; j < arr.length; j++) {
+                option_field = option_field + '<option>' + arr[j].toString() + '</option>'
             }
-        });
+            document.getElementById('bale_edit_popup').innerHTML = option_field;
+
+            document.getElementById("bale_edit_popup").value = item.bale_no;
+            id_final_edit_popup = id_to_edit;
+
+        }
+    })
+}
+
+function closePopup() {
+    stop_closing = 2;
+    $('#popupEditFormPurchase').hide();
+    $('#purchasePage').show();
+    $('#purchase-header').show();
+}
+
+function billBaleMappingEdit() {
+    document.getElementById('bale_edit_popup').innerHTML = '';
+    bill_id = document.getElementById('bill_edit_popup').value;
+    if (bill_id === "") {
+        var doNothing = 0;
+    } else if (billbaleMap[bill_id] != null) {
+        var arr = billbaleMap[bill_id];
+        var option_field = '';
+        for (var j = 0; j < arr.length; j++) {
+            option_field = option_field + '<option>' + arr[j].toString() + '</option>'
+        }
+        document.getElementById('bale_edit_popup').innerHTML = option_field;
+    } else {
+        swal({
+            icon: 'error',
+            title: 'Error',
+            text: 'No Entry Found with Bill Number = ' + bill_id,
+        })
+    }
+}
+
+
+$(document).on('submit', '#popupFormPurchase', function (e) {
+    e.preventDefault();
+    if (stop_closing > 1) {
+        stop_closing = 0
+    } else {
+        swal({
+            title: "This Entry will be Edited permanently!",
+            text: "Are you sure to proceed?",
+            icon: "warning",
+            buttons: {
+                confirm: 'Yes',
+                cancel: 'No'
+            },
+            dangerMode: true,
+        })
+            .then((isConfirm) => {
+                if (isConfirm) {
+                    var purchasePage = document.getElementById('purchasePage');
+
+                    var starts = '<br><br><table class="table table-striped table-bordered">\
+              <colgroup>\
+                   <col span="1" style="width: 10%;">\
+                   <col span="1" style="width: 7%;">\
+                   <col span="1" style="width: 10%;">\
+                   <col span="1" style="width: 7%;">\
+                   <col span="1" style="width: 10%;">\
+                   <col span="1" style="width: 10%;">\
+                   <col span="1" style="width: 6%;">\
+                   <col span="1" style="width: 5%;">\
+                   <col span="1" style="width: 6%;">\
+                   <col span="1" style="width: 7%;">\
+                   <col span="1" style="width: 5%;">\
+                   <col span="1" style="width: 7%;">\
+                   <col span="1" style="width: 7%;">\
+                   <col span="1" style="width: 7%;">\
+               </colgroup>\
+              <thead class="thead-dark">\
+              <tr>\
+              <th>DATE</th>\
+               <th>BILL</th>\
+              <th>PARTY</th>\
+              <th>BALE</th>\
+              <th>P. QUAL</th>\
+              <th>O. QUAL</th>\
+              <th>DESIGN</th>\
+              <th>HSN</th>\
+              <th>TAKA</th>\
+              <th>MTS</th>\
+              <th>SHORT</th>\
+              <th>PLACE</th>\
+              <th>OPEN</th>\
+              <th style="width: 50px;"></th>\
+              </tr>\
+              </thead>';
+                    var ends = '</table>';
+                    var csrftoken = getCookie('csrftoken');
+
+                    $.ajax({
+                        type: 'POST',
+                        url: '/editGivenPurchase',
+                        data: {
+                            id: id_final_edit_popup,
+                            date: $('#date_edit_popup').val(),
+                            bill: $('#bill_edit_popup').val(),
+                            party: $('#party_edit_popup').val(),
+                            bale: $('#bale_edit_popup').val(),
+                            party_quality: $('#party_quality_edit_popup').val(),
+                            our_quality: $('#our_quality_edit_popup').val(),
+                            design: $('#design_edit_popup').val(),
+                            hsn: $('#hsn_edit_popup').val(),
+                            taka: $('#taka_edit_popup').val(),
+                            mts: $('#mts_edit_popup').val(),
+                            shortage: $('#shortage_edit_popup').val(),
+                            place: $('#place_edit_popup').val(),
+                            open: $('#open_edit_popup').val(),
+                            bill_old:bill_no_edit_table,
+                            bale_old:bale_no_edit_table,
+                            csrfmiddlewaretoken: csrftoken
+                        },
+                        success: function (data) {
+                            dat = JSON.parse(data);
+                            $('#popupEditFormPurchase').hide();
+                            $('#purchasePage').show();
+                            $('#purchase-header').show();
+
+                            for (var i = 0; i < dat.length; i++) {
+                                dat[i] = JSON.parse(dat[i])
+                            }
+
+                            var tmp = '';
+                            for (var i = 0; i < dat.length; i++) {
+                                var arr = dat[i].date.split("-");
+                                dat[i].date = arr[2] + "/" + arr[1] + "/" + arr[0];
+                                tmp = tmp + '<tr>';
+                                tmp = tmp + '<td>' + dat[i].date.toString() + '</td>';
+                                tmp = tmp + '<td>' + dat[i].bill_no.toString() + '</td>';
+                                tmp = tmp + '<td>' + dat[i].party_name.toString() + '</td>';
+                                tmp = tmp + '<td>' + dat[i].bale_no.toString() + '</td>';
+                                tmp = tmp + '<td>' + dat[i].party_quality_name.toString() + '</td>';
+                                tmp = tmp + '<td>' + dat[i].our_quality_name.toString() + '</td>';
+                                tmp = tmp + '<td>' + dat[i].design.toString() + '</td>';
+                                tmp = tmp + '<td>' + dat[i].hsn_code.toString() + '</td>';
+                                tmp = tmp + '<td>' + dat[i].taka.toString() + '</td>';
+                                tmp = tmp + '<td>' + dat[i].mts.toString() + '</td>';
+                                tmp = tmp + '<td>' + dat[i].shortage.toString() + '</td>';
+                                tmp = tmp + '<td>' + dat[i].place.toString() + '</td>';
+                                tmp = tmp + '<td>' + dat[i].open.toString() + '</td>';
+
+                                tmp = tmp + '<td>' + '<button onclick="showGivenPurchaseEntry(this.id)"  class="btn btn-success" id="edit_btnn" style="width: 100%">Edit</button> ' + '</td>';
+                                tmp = tmp + '</tr>';
+                            }
+                            purchasePage.innerHTML = starts + tmp + ends;
+                            for (var i = 0; i < dat.length; i++) {
+                                document.getElementById("edit_btnn").setAttribute("id", "edit" + dat[i].id.toString());
+                            }
+                            stop_closing = 0
+                        }
+                    })
+                }
+            });
+    }
+
 })
+

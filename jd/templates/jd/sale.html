@@ -9,7 +9,7 @@
 <style>
 </style>
 <body>
-<div class="container" style="padding-top: 50px;" id="edit-header">
+<div class="container" style="padding-top: 50px;" id="sale-header">
     <div class="row">
         <div class="col-md-2">
             <button onclick="addSale()" class="btn btn-primary" style="width: 100%">Add Sale</button>
@@ -27,7 +27,7 @@
 
 </div>
 
-<div class="card card-container container" id="popupEditForm">
+<div class="card card-container container" id="popupEditFormSale">
     <form class="form-signin" id="popupForm">
         <button onclick="closePopup(this.id)" id="close" style="float: right;width: 5%;">X</button>
         <br>
@@ -64,7 +64,6 @@
                        oninput="this.value = this.value.toUpperCase()" type="text" required>
             </div>
         </div>
-        '
         <button class="btn btn-lg btn-primary btn-block btn-signin" id="editPopupSubmit" type="submit">Edit Entry
         </button>
     </form>
