@@ -173,7 +173,8 @@ def getBaleProdMap(request):
         dict[item.bale_no] = []
     for item in mydata:
         dict[item.bale_no].append(item.our_quality_name)
-
+    for item in mydata:
+        dict[item.bale_no].sort()
     return HttpResponse(json.dumps(dict))
 
 
@@ -186,7 +187,8 @@ def getBaleProdMapSale(request):
     for item in mydata:
         if item.our_quality_name not in dict[item.bale_no]:
             dict[item.bale_no].append(item.our_quality_name)
-
+    for item in mydata:
+        dict[item.bale_no].sort()
     return HttpResponse(json.dumps(dict))
 
 
@@ -199,7 +201,8 @@ def getBillBaleMap(request):
     for item in mydata:
         if item.bale_no not in dict[item.bill_no]:
             dict[item.bill_no].append(item.bale_no)
-
+    for item in mydata:
+        dict[item.bill_no].sort()
     return HttpResponse(json.dumps(dict))
 
 
@@ -305,7 +308,7 @@ def editGivenSale(request):
         buyer_r = request.POST['party_popup']
         bale_r = request.POST['bale_popup']
         our_quality_r = request.POST['our_quality_popup']
-        design_r = request.POST['design_popup']
+        design_r = Purchase.objects.get(bale_no=bale_r, our_quality_name=our_quality_r).design
         taka_r = request.POST['taka_popup']
         mts_r = request.POST['mts_popup']
         bale_old = request.POST['bale']

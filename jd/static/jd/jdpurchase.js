@@ -217,6 +217,29 @@ function deletePurchase() {
         },
         success: function (data) {
             billbaleMap = JSON.parse(data);
+        },
+        error: function (xhr) {
+            var error_message = xhr.responseText.split(" ")[0]
+            console.log(error_message)
+            if (error_message === "MultipleObjectsReturned") {
+                swal({
+                    icon: 'error',
+                    title: 'Error',
+                    text: 'More than 1 Entry Found with given details',
+                })
+            } else if (error_message === "DoesNotExist") {
+                swal({
+                    icon: 'error',
+                    title: 'Error',
+                    text: 'No Entry Found with given details',
+                })
+            } else {
+                swal({
+                    icon: 'error',
+                    title: 'Error',
+                    text: 'Some Unknown Error Occured',
+                })
+            }
         }
     })
 
@@ -328,6 +351,29 @@ $(document).on('submit', '#formDelete', function (e) {
             for (var i = 0; i < dat.length; i++) {
                 document.getElementById("delete_btnn").setAttribute("id", "delete" + dat[i].id.toString());
             }
+        },
+        error: function (xhr) {
+            var error_message = xhr.responseText.split(" ")[0]
+            console.log(error_message)
+            if (error_message === "MultipleObjectsReturned") {
+                swal({
+                    icon: 'error',
+                    title: 'Error',
+                    text: 'More than 1 Entry Found with given details',
+                })
+            } else if (error_message === "DoesNotExist") {
+                swal({
+                    icon: 'error',
+                    title: 'Error',
+                    text: 'No Entry Found with given details',
+                })
+            } else {
+                swal({
+                    icon: 'error',
+                    title: 'Error',
+                    text: 'Some Unknown Error Occured',
+                })
+            }
         }
     })
 })
@@ -431,6 +477,29 @@ function deleteGivenPurchaseEntry(id_to_delete) {
                                 document.getElementById("delete_btnn").setAttribute("id", "delete" + dat[i].id.toString());
                             }
                         }
+                    },
+                    error: function (xhr) {
+                        var error_message = xhr.responseText.split(" ")[0]
+                        console.log(error_message)
+                        if (error_message === "MultipleObjectsReturned") {
+                            swal({
+                                icon: 'error',
+                                title: 'Error',
+                                text: 'More than 1 Entry Found with given details',
+                            })
+                        } else if (error_message === "DoesNotExist") {
+                            swal({
+                                icon: 'error',
+                                title: 'Error',
+                                text: 'No Entry Found with given details',
+                            })
+                        } else {
+                            swal({
+                                icon: 'error',
+                                title: 'Error',
+                                text: 'Some Unknown Error Occured',
+                            })
+                        }
                     }
                 })
 
@@ -467,6 +536,29 @@ function editPurchase() {
         },
         success: function (data) {
             billbaleMap = JSON.parse(data);
+        },
+        error: function (xhr) {
+            var error_message = xhr.responseText.split(" ")[0]
+            console.log(error_message)
+            if (error_message === "MultipleObjectsReturned") {
+                swal({
+                    icon: 'error',
+                    title: 'Error',
+                    text: 'More than 1 Entry Found with given details',
+                })
+            } else if (error_message === "DoesNotExist") {
+                swal({
+                    icon: 'error',
+                    title: 'Error',
+                    text: 'No Entry Found with given details',
+                })
+            } else {
+                swal({
+                    icon: 'error',
+                    title: 'Error',
+                    text: 'Some Unknown Error Occured',
+                })
+            }
         }
     })
 
@@ -578,6 +670,29 @@ $(document).on('submit', '#formEdit', function (e) {
             for (var i = 0; i < dat.length; i++) {
                 document.getElementById("edit_btnn").setAttribute("id", "edit" + dat[i].id.toString());
             }
+        },
+        error: function (xhr) {
+            var error_message = xhr.responseText.split(" ")[0]
+            console.log(error_message)
+            if (error_message === "MultipleObjectsReturned") {
+                swal({
+                    icon: 'error',
+                    title: 'Error',
+                    text: 'More than 1 Entry Found with given details',
+                })
+            } else if (error_message === "DoesNotExist") {
+                swal({
+                    icon: 'error',
+                    title: 'Error',
+                    text: 'No Entry Found with given details',
+                })
+            } else {
+                swal({
+                    icon: 'error',
+                    title: 'Error',
+                    text: 'Some Unknown Error Occured',
+                })
+            }
         }
     })
 })
@@ -609,19 +724,33 @@ function showGivenPurchaseEntry(id_to_edit) {
             document.getElementById("shortage_edit_popup").value = item.shortage;
             document.getElementById("place_edit_popup").value = item.place;
             document.getElementById("open_edit_popup").value = item.open;
+            document.getElementById('bale_edit_popup').value = item.bale_no;
 
-
-            bill_id = item.bill_no;
-            var arr = billbaleMap[bill_id];
-            var option_field = '';
-            for (var j = 0; j < arr.length; j++) {
-                option_field = option_field + '<option>' + arr[j].toString() + '</option>'
-            }
-            document.getElementById('bale_edit_popup').innerHTML = option_field;
-
-            document.getElementById("bale_edit_popup").value = item.bale_no;
             id_final_edit_popup = id_to_edit;
 
+        },
+        error: function (xhr) {
+            var error_message = xhr.responseText.split(" ")[0]
+            console.log(error_message)
+            if (error_message === "MultipleObjectsReturned") {
+                swal({
+                    icon: 'error',
+                    title: 'Error',
+                    text: 'More than 1 Entry Found with given details',
+                })
+            } else if (error_message === "DoesNotExist") {
+                swal({
+                    icon: 'error',
+                    title: 'Error',
+                    text: 'No Entry Found with given details',
+                })
+            } else {
+                swal({
+                    icon: 'error',
+                    title: 'Error',
+                    text: 'Some Unknown Error Occured',
+                })
+            }
         }
     })
 }
@@ -632,28 +761,6 @@ function closePopup() {
     $('#purchasePage').show();
     $('#purchase-header').show();
 }
-
-function billBaleMappingEdit() {
-    document.getElementById('bale_edit_popup').innerHTML = '';
-    bill_id = document.getElementById('bill_edit_popup').value;
-    if (bill_id === "") {
-        var doNothing = 0;
-    } else if (billbaleMap[bill_id] != null) {
-        var arr = billbaleMap[bill_id];
-        var option_field = '';
-        for (var j = 0; j < arr.length; j++) {
-            option_field = option_field + '<option>' + arr[j].toString() + '</option>'
-        }
-        document.getElementById('bale_edit_popup').innerHTML = option_field;
-    } else {
-        swal({
-            icon: 'error',
-            title: 'Error',
-            text: 'No Entry Found with Bill Number = ' + bill_id,
-        })
-    }
-}
-
 
 $(document).on('submit', '#popupFormPurchase', function (e) {
     e.preventDefault();
@@ -730,8 +837,8 @@ $(document).on('submit', '#popupFormPurchase', function (e) {
                             shortage: $('#shortage_edit_popup').val(),
                             place: $('#place_edit_popup').val(),
                             open: $('#open_edit_popup').val(),
-                            bill_old:bill_no_edit_table,
-                            bale_old:bale_no_edit_table,
+                            bill_old: bill_no_edit_table,
+                            bale_old: bale_no_edit_table,
                             csrfmiddlewaretoken: csrftoken
                         },
                         success: function (data) {
@@ -740,38 +847,66 @@ $(document).on('submit', '#popupFormPurchase', function (e) {
                             $('#purchasePage').show();
                             $('#purchase-header').show();
 
-                            for (var i = 0; i < dat.length; i++) {
-                                dat[i] = JSON.parse(dat[i])
-                            }
+                            if (dat.length === 0) {
+                                purchasePage.innerHTML = '';
+                            } else {
+                                for (var i = 0; i < dat.length; i++) {
+                                    dat[i] = JSON.parse(dat[i])
+                                }
 
-                            var tmp = '';
-                            for (var i = 0; i < dat.length; i++) {
-                                var arr = dat[i].date.split("-");
-                                dat[i].date = arr[2] + "/" + arr[1] + "/" + arr[0];
-                                tmp = tmp + '<tr>';
-                                tmp = tmp + '<td>' + dat[i].date.toString() + '</td>';
-                                tmp = tmp + '<td>' + dat[i].bill_no.toString() + '</td>';
-                                tmp = tmp + '<td>' + dat[i].party_name.toString() + '</td>';
-                                tmp = tmp + '<td>' + dat[i].bale_no.toString() + '</td>';
-                                tmp = tmp + '<td>' + dat[i].party_quality_name.toString() + '</td>';
-                                tmp = tmp + '<td>' + dat[i].our_quality_name.toString() + '</td>';
-                                tmp = tmp + '<td>' + dat[i].design.toString() + '</td>';
-                                tmp = tmp + '<td>' + dat[i].hsn_code.toString() + '</td>';
-                                tmp = tmp + '<td>' + dat[i].taka.toString() + '</td>';
-                                tmp = tmp + '<td>' + dat[i].mts.toString() + '</td>';
-                                tmp = tmp + '<td>' + dat[i].shortage.toString() + '</td>';
-                                tmp = tmp + '<td>' + dat[i].place.toString() + '</td>';
-                                tmp = tmp + '<td>' + dat[i].open.toString() + '</td>';
+                                var tmp = '';
+                                for (var i = 0; i < dat.length; i++) {
+                                    var arr = dat[i].date.split("-");
+                                    dat[i].date = arr[2] + "/" + arr[1] + "/" + arr[0];
+                                    tmp = tmp + '<tr>';
+                                    tmp = tmp + '<td>' + dat[i].date.toString() + '</td>';
+                                    tmp = tmp + '<td>' + dat[i].bill_no.toString() + '</td>';
+                                    tmp = tmp + '<td>' + dat[i].party_name.toString() + '</td>';
+                                    tmp = tmp + '<td>' + dat[i].bale_no.toString() + '</td>';
+                                    tmp = tmp + '<td>' + dat[i].party_quality_name.toString() + '</td>';
+                                    tmp = tmp + '<td>' + dat[i].our_quality_name.toString() + '</td>';
+                                    tmp = tmp + '<td>' + dat[i].design.toString() + '</td>';
+                                    tmp = tmp + '<td>' + dat[i].hsn_code.toString() + '</td>';
+                                    tmp = tmp + '<td>' + dat[i].taka.toString() + '</td>';
+                                    tmp = tmp + '<td>' + dat[i].mts.toString() + '</td>';
+                                    tmp = tmp + '<td>' + dat[i].shortage.toString() + '</td>';
+                                    tmp = tmp + '<td>' + dat[i].place.toString() + '</td>';
+                                    tmp = tmp + '<td>' + dat[i].open.toString() + '</td>';
 
-                                tmp = tmp + '<td>' + '<button onclick="showGivenPurchaseEntry(this.id)"  class="btn btn-success" id="edit_btnn" style="width: 100%">Edit</button> ' + '</td>';
-                                tmp = tmp + '</tr>';
-                            }
-                            purchasePage.innerHTML = starts + tmp + ends;
-                            for (var i = 0; i < dat.length; i++) {
-                                document.getElementById("edit_btnn").setAttribute("id", "edit" + dat[i].id.toString());
+                                    tmp = tmp + '<td>' + '<button onclick="showGivenPurchaseEntry(this.id)"  class="btn btn-success" id="edit_btnn" style="width: 100%">Edit</button> ' + '</td>';
+                                    tmp = tmp + '</tr>';
+                                }
+                                purchasePage.innerHTML = starts + tmp + ends;
+                                for (var i = 0; i < dat.length; i++) {
+                                    document.getElementById("edit_btnn").setAttribute("id", "edit" + dat[i].id.toString());
+                                }
                             }
                             stop_closing = 0
+                        },
+                        error: function (xhr) {
+                            var error_message = xhr.responseText.split(" ")[0]
+                            console.log(error_message)
+                            if (error_message === "MultipleObjectsReturned") {
+                                swal({
+                                    icon: 'error',
+                                    title: 'Error',
+                                    text: 'More than 1 Entry Found with given details',
+                                })
+                            } else if (error_message === "DoesNotExist") {
+                                swal({
+                                    icon: 'error',
+                                    title: 'Error',
+                                    text: 'No Entry Found with given details',
+                                })
+                            } else {
+                                swal({
+                                    icon: 'error',
+                                    title: 'Error',
+                                    text: 'Some Unknown Error Occured',
+                                })
+                            }
                         }
+
                     })
                 }
             });

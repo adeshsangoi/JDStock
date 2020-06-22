@@ -5,7 +5,7 @@ var quality_del_table;
 var bale_id_edit_table;
 var quality_edit_table;
 var id_final_edit_popup;
-var stop_closing=0;
+var stop_closing = 0;
 
 function getCookie(name) {
     var cookieValue = null;
@@ -113,8 +113,27 @@ $(document).on('submit', '#add-head', function (e) {
         success: function (data) {
             baleProdMap = JSON.parse(data);
         },
-        error: function (data) {
-            swal("Error", ", Your entry is Added!", "success");
+        error: function (xhr) {
+            var error_message = xhr.responseText.split(" ")[0];
+            if (error_message === "MultipleObjectsReturned") {
+                swal({
+                    icon: 'error',
+                    title: 'Error',
+                    text: 'More than 1 Entry Found with given details',
+                })
+            } else if (error_message === "DoesNotExist") {
+                swal({
+                    icon: 'error',
+                    title: 'Error',
+                    text: 'No Entry Found with given details',
+                })
+            } else {
+                swal({
+                    icon: 'error',
+                    title: 'Error',
+                    text: 'Some Unknown Error Occured',
+                })
+            }
         }
     })
 })
@@ -216,6 +235,29 @@ function deleteSale() {
         },
         success: function (data) {
             baleProdMap = JSON.parse(data);
+        },
+        error: function (xhr) {
+            var error_message = xhr.responseText.split(" ")[0]
+            console.log(error_message)
+            if (error_message === "MultipleObjectsReturned") {
+                swal({
+                    icon: 'error',
+                    title: 'Error',
+                    text: 'More than 1 Entry Found with given details',
+                })
+            } else if (error_message === "DoesNotExist") {
+                swal({
+                    icon: 'error',
+                    title: 'Error',
+                    text: 'No Entry Found with given details',
+                })
+            } else {
+                swal({
+                    icon: 'error',
+                    title: 'Error',
+                    text: 'Some Unknown Error Occured',
+                })
+            }
         }
     })
 
@@ -306,6 +348,29 @@ $(document).on('submit', '#formDelete', function (e) {
             for (var i = 0; i < dat.length; i++) {
                 document.getElementById("delete_btnn").setAttribute("id", "delete" + dat[i].id.toString());
             }
+        },
+        error: function (xhr) {
+            var error_message = xhr.responseText.split(" ")[0]
+            console.log(error_message)
+            if (error_message === "MultipleObjectsReturned") {
+                swal({
+                    icon: 'error',
+                    title: 'Error',
+                    text: 'More than 1 Entry Found with given details',
+                })
+            } else if (error_message === "DoesNotExist") {
+                swal({
+                    icon: 'error',
+                    title: 'Error',
+                    text: 'No Entry Found with given details',
+                })
+            } else {
+                swal({
+                    icon: 'error',
+                    title: 'Error',
+                    text: 'Some Unknown Error Occured',
+                })
+            }
         }
     })
 })
@@ -363,10 +428,9 @@ function deleteGivenSaleEntry(id_to_delete) {
                         for (var i = 0; i < dat.length; i++) {
                             dat[i] = JSON.parse(dat[i])
                         }
-                        if (dat.length === 0){
+                        if (dat.length === 0) {
                             salesPage.innerHTML = ""
-                        }
-                        else {
+                        } else {
                             var tmp = '';
                             for (var i = 0; i < dat.length; i++) {
                                 var arr = dat[i].date.split("-");
@@ -386,6 +450,29 @@ function deleteGivenSaleEntry(id_to_delete) {
                             for (var i = 0; i < dat.length; i++) {
                                 document.getElementById("delete_btnn").setAttribute("id", "delete" + dat[i].id.toString());
                             }
+                        }
+                    },
+                    error: function (xhr) {
+                        var error_message = xhr.responseText.split(" ")[0]
+                        console.log(error_message)
+                        if (error_message === "MultipleObjectsReturned") {
+                            swal({
+                                icon: 'error',
+                                title: 'Error',
+                                text: 'More than 1 Entry Found with given details',
+                            })
+                        } else if (error_message === "DoesNotExist") {
+                            swal({
+                                icon: 'error',
+                                title: 'Error',
+                                text: 'No Entry Found with given details',
+                            })
+                        } else {
+                            swal({
+                                icon: 'error',
+                                title: 'Error',
+                                text: 'Some Unknown Error Occured',
+                            })
                         }
                     }
                 })
@@ -423,6 +510,29 @@ function editSale() {
         },
         success: function (data) {
             baleProdMap = JSON.parse(data);
+        },
+        error: function (xhr) {
+            var error_message = xhr.responseText.split(" ")[0]
+            console.log(error_message)
+            if (error_message === "MultipleObjectsReturned") {
+                swal({
+                    icon: 'error',
+                    title: 'Error',
+                    text: 'More than 1 Entry Found with given details',
+                })
+            } else if (error_message === "DoesNotExist") {
+                swal({
+                    icon: 'error',
+                    title: 'Error',
+                    text: 'No Entry Found with given details',
+                })
+            } else {
+                swal({
+                    icon: 'error',
+                    title: 'Error',
+                    text: 'Some Unknown Error Occured',
+                })
+            }
         }
     })
 
@@ -535,6 +645,29 @@ $(document).on('submit', '#formEdit', function (e) {
             for (var i = 0; i < dat.length; i++) {
                 document.getElementById("edit_btnn").setAttribute("id", "edit" + dat[i].id.toString());
             }
+        },
+        error: function (xhr) {
+            var error_message = xhr.responseText.split(" ")[0]
+            console.log(error_message)
+            if (error_message === "MultipleObjectsReturned") {
+                swal({
+                    icon: 'error',
+                    title: 'Error',
+                    text: 'More than 1 Entry Found with given details',
+                })
+            } else if (error_message === "DoesNotExist") {
+                swal({
+                    icon: 'error',
+                    title: 'Error',
+                    text: 'No Entry Found with given details',
+                })
+            } else {
+                swal({
+                    icon: 'error',
+                    title: 'Error',
+                    text: 'Some Unknown Error Occured',
+                })
+            }
         }
     })
 })
@@ -575,6 +708,29 @@ function showGivenSaleEntry(id_to_edit) {
             id_final_edit_popup = id_to_edit;
 
 
+        },
+        error: function (xhr) {
+            var error_message = xhr.responseText.split(" ")[0]
+            console.log(error_message)
+            if (error_message === "MultipleObjectsReturned") {
+                swal({
+                    icon: 'error',
+                    title: 'Error',
+                    text: 'More than 1 Entry Found with given details',
+                })
+            } else if (error_message === "DoesNotExist") {
+                swal({
+                    icon: 'error',
+                    title: 'Error',
+                    text: 'No Entry Found with given details',
+                })
+            } else {
+                swal({
+                    icon: 'error',
+                    title: 'Error',
+                    text: 'Some Unknown Error Occured',
+                })
+            }
         }
     })
 }
@@ -589,10 +745,9 @@ function closePopup() {
 
 $(document).on('submit', '#popupForm', function (e) {
     e.preventDefault();
-    if(stop_closing>1){
+    if (stop_closing > 1) {
         stop_closing = 0
-    }
-    else {
+    } else {
         swal({
             title: "This Entry will be Edited permanently!",
             text: "Are you sure to proceed?",
@@ -654,31 +809,57 @@ $(document).on('submit', '#popupForm', function (e) {
                             $('#popupEditFormSale').hide();
                             $('#salesPage').show();
                             $('#sale-header').show();
+                            if (dat.length === 0) {
+                                purchasePage.innerHTML = '';
+                            } else {
+                                for (var i = 0; i < dat.length; i++) {
+                                    dat[i] = JSON.parse(dat[i])
+                                }
 
-                            for (var i = 0; i < dat.length; i++) {
-                                dat[i] = JSON.parse(dat[i])
+                                var tmp = '';
+                                for (var i = 0; i < dat.length; i++) {
+                                    var arr = dat[i].date.split("-");
+                                    dat[i].date = arr[2] + "/" + arr[1] + "/" + arr[0];
+                                    tmp = tmp + '<tr>';
+                                    tmp = tmp + '<td>' + dat[i].date.toString() + '</td>';
+                                    tmp = tmp + '<td>' + dat[i].buyer_name.toString() + '</td>';
+                                    tmp = tmp + '<td>' + dat[i].bale_no.toString() + '</td>';
+                                    tmp = tmp + '<td>' + dat[i].our_quality_name.toString() + '</td>';
+                                    tmp = tmp + '<td>' + dat[i].design.toString() + '</td>';
+                                    tmp = tmp + '<td>' + dat[i].taka.toString() + '</td>';
+                                    tmp = tmp + '<td>' + dat[i].mts.toString() + '</td>';
+                                    tmp = tmp + '<td>' + '<button onclick="showGivenSaleEntry(this.id)"  class="btn btn-success" id="edit_btnn" style="width: 100%"> Edit </button> ' + '</td>';
+                                    tmp = tmp + '</tr>';
+                                }
+                                salesPage.innerHTML = starts + tmp + ends;
+                                for (var i = 0; i < dat.length; i++) {
+                                    document.getElementById("edit_btnn").setAttribute("id", "edit" + dat[i].id.toString());
+                                }
                             }
-
-                            var tmp = '';
-                            for (var i = 0; i < dat.length; i++) {
-                                var arr = dat[i].date.split("-");
-                                dat[i].date = arr[2] + "/" + arr[1] + "/" + arr[0];
-                                tmp = tmp + '<tr>';
-                                tmp = tmp + '<td>' + dat[i].date.toString() + '</td>';
-                                tmp = tmp + '<td>' + dat[i].buyer_name.toString() + '</td>';
-                                tmp = tmp + '<td>' + dat[i].bale_no.toString() + '</td>';
-                                tmp = tmp + '<td>' + dat[i].our_quality_name.toString() + '</td>';
-                                tmp = tmp + '<td>' + dat[i].design.toString() + '</td>';
-                                tmp = tmp + '<td>' + dat[i].taka.toString() + '</td>';
-                                tmp = tmp + '<td>' + dat[i].mts.toString() + '</td>';
-                                tmp = tmp + '<td>' + '<button onclick="showGivenSaleEntry(this.id)"  class="btn btn-success" id="edit_btnn" style="width: 100%"> Edit </button> ' + '</td>';
-                                tmp = tmp + '</tr>';
+                            stop_closing = 0
+                        },
+                        error: function (xhr) {
+                            var error_message = xhr.responseText.split(" ")[0]
+                            console.log(error_message)
+                            if (error_message === "MultipleObjectsReturned") {
+                                swal({
+                                    icon: 'error',
+                                    title: 'Error',
+                                    text: 'More than 1 Entry Found with given details',
+                                })
+                            } else if (error_message === "DoesNotExist") {
+                                swal({
+                                    icon: 'error',
+                                    title: 'Error',
+                                    text: 'No Entry Found with given details',
+                                })
+                            } else {
+                                swal({
+                                    icon: 'error',
+                                    title: 'Error',
+                                    text: 'Some Unknown Error Occured',
+                                })
                             }
-                            salesPage.innerHTML = starts + tmp + ends;
-                            for (var i = 0; i < dat.length; i++) {
-                                document.getElementById("edit_btnn").setAttribute("id", "edit" + dat[i].id.toString());
-                            }
-                            stop_closing=0
                         }
                     })
                 }
