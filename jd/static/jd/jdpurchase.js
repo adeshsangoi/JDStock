@@ -1,6 +1,7 @@
 var numberOfEntries = 0;
-var bill_no_to_delete = 0;
-var bill_no_to_edit = 0;
+var bill_no_del_table;
+var bale_no_del_table;
+
 var id_to_edit = 0;
 var billbaleMap;
 var addboxdata =
@@ -221,23 +222,21 @@ function deletePurchase() {
 function billBaleMapping() {
     document.getElementById('bale_options_delete').innerHTML = '';
     bill_id = document.getElementById('bill_no_for_delete').value;
-    if(bill_id === ""){
+    if (bill_id === "") {
         var doNothing = 0;
-    }
-    else if(billbaleMap[bill_id] != null) {
+    } else if (billbaleMap[bill_id] != null) {
         var arr = billbaleMap[bill_id];
         var option_field = '';
         for (var j = 0; j < arr.length; j++) {
             option_field = option_field + '<option>' + arr[j].toString() + '</option>'
         }
         document.getElementById('bale_options_delete').innerHTML = option_field;
-    }
-    else{
-         swal({
-                    icon: 'error',
-                    title: 'Error',
-                    text: 'No Entry Found with Bill Number = ' + bill_id,
-                })
+    } else {
+        swal({
+            icon: 'error',
+            title: 'Error',
+            text: 'No Entry Found with Bill Number = ' + bill_id,
+        })
     }
 }
 
@@ -245,164 +244,197 @@ function billBaleMapping() {
 $(document).on('submit', '#formDelete', function (e) {
     e.preventDefault();
     var purchasePage = document.getElementById('purchasePage');
+    bill_no_del_table = document.getElementById("bill_no_for_delete").value;
+    bale_no_del_table = document.getElementById("bale_options_delete").value;
 
+    var starts = '<br><br><table class="table table-striped table-bordered">\
+              <colgroup>\
+                   <col span="1" style="width: 10%;">\
+                   <col span="1" style="width: 7%;">\
+                   <col span="1" style="width: 10%;">\
+                   <col span="1" style="width: 7%;">\
+                   <col span="1" style="width: 10%;">\
+                   <col span="1" style="width: 10%;">\
+                   <col span="1" style="width: 6%;">\
+                   <col span="1" style="width: 5%;">\
+                   <col span="1" style="width: 6%;">\
+                   <col span="1" style="width: 7%;">\
+                   <col span="1" style="width: 5%;">\
+                   <col span="1" style="width: 7%;">\
+                   <col span="1" style="width: 7%;">\
+                   <col span="1" style="width: 7%;">\
+               </colgroup>\
+              <thead class="thead-dark">\
+              <tr>\
+              <th>DATE</th>\
+               <th>BILL</th>\
+              <th>PARTY</th>\
+              <th>BALE</th>\
+              <th>P. QUAL</th>\
+              <th>O. QUAL</th>\
+              <th>DESIGN</th>\
+              <th>HSN</th>\
+              <th>TAKA</th>\
+              <th>MTS</th>\
+              <th>SHORT</th>\
+              <th>PLACE</th>\
+              <th>OPEN</th>\
+              <th style="width: 50px;"></th>\
+              </tr>\
+              </thead>';
+    var ends = '</table>';
     var csrftoken = getCookie('csrftoken');
-    var temp =
-        '<div class="card card-container">\
-        <form class="form-signin" id="formToBeDeleted">\
-            <div class="row">\
-                <div class="col-md-4">\
-                    <input id="date_delete" class="form-control" type="date" readonly >\
-                </div>\
-                <div class="col-md-4">\
-                    <input id="bill_delete" class="form-control" type="number" readonly>\
-                </div>\
-                <div class="col-md-4">\
-                    <input id="party_delete" class="form-control" type="text" readonly>\
-                </div>\
-             </div>  \
-             <br>\
-            <div class="row">\
-                <div class="col-md-3">\
-                    <input id="bale_delete" class="form-control" type="number" readonly>\
-                </div>\
-                <div class="col-md-3">\
-                    <input id="party_quality_delete" class="form-control" type="text" readonly>\
-                </div>\
-                <div class="col-md-3">\
-                    <input id="our_quality_delete" class="form-control" type="text" readonly>\
-                </div>\
-                <div class="col-md-3">\
-                    <input id="design_delete" class="form-control" type="text" readonly>\
-                </div>\
-            </div>\
-            <br>\
-            <div class="row">\
-                <div class="col-md-2">\
-                    <input id="hsn_delete" class="form-control" type="text" readonly>\
-                </div>\
-                <div class="col-md-2">\
-                    <input id="taka_delete" class="form-control" type="number" readonly>\
-                </div>\
-                <div class="col-md-2">\
-                    <input id="mts_delete" class="form-control" type="text" readonly>\
-                </div>\
-                <div class="col-md-2">\
-                    <input id="shortage_delete" class="form-control" type="text" readonly>\
-                </div>\
-                <div class="col-md-2">\
-                    <input id="place_delete" class="form-control" type="text" value="JD" readonly>\
-                </div>\
-                <div class="col-md-2">\
-                    <input id="open_delete" class="form-control" type="text" readonly >\
-                </div>\
-            </div>\
-            <br>\
-            <button class="btn btn-lg btn-primary btn-block btn-signin" type="submit">Delete Given Entry</button>\
-        </form>\
-    </div>';
 
     $.ajax({
         type: 'POST',
         url: '/deletePurchase',
         data: {
-            bill: $('#bill_no_for_delete').val(),
-            bale: $('#bale_options_delete').val(),
+            bill: bill_no_del_table,
+            bale: bale_no_del_table,
             csrfmiddlewaretoken: csrftoken
         },
         success: function (data) {
-            var context = JSON.parse(data);
-            purchasePage.innerHTML = temp;
-            document.getElementById('date_delete').value = context.date;
-            document.getElementById('place_delete').value = context.place;
-            document.getElementById('open_delete').value = context.open;
-            document.getElementById('bill_delete').value = context.bill_no;
-            document.getElementById('bale_delete').value = context.bale_no;
-            document.getElementById('party_delete').value = context.party_name;
-            document.getElementById('party_quality_delete').value = context.party_quality_name;
-            document.getElementById('our_quality_delete').value = context.our_quality_name;
-            document.getElementById('hsn_delete').value = context.hsn_code;
-            document.getElementById('taka_delete').value = context.taka;
-            document.getElementById('mts_delete').value = context.mts;
-            document.getElementById('shortage_delete').value = context.shortage;
-            document.getElementById('design_delete').value = context.design;
-        },
-        error: function (xhr) {
-            var error_message = xhr.responseText.split(" ")[0]
-            console.log(error_message)
-            if (error_message === "MultipleObjectsReturned") {
-                swal({
-                    icon: 'error',
-                    title: 'Error',
-                    text: 'More than 1 Entry Found with given details',
-                })
-            } else if (error_message === "DoesNotExist") {
-                swal({
-                    icon: 'error',
-                    title: 'Error',
-                    text: 'No Entry Found with given details',
-                })
-            } else {
-                swal({
-                    icon: 'error',
-                    title: 'Error',
-                    text: 'Some Unknown Error Occured',
-                })
+            dat = JSON.parse(data);
+            for (var i = 0; i < dat.length; i++) {
+                dat[i] = JSON.parse(dat[i])
+            }
+
+            var tmp = '';
+            for (var i = 0; i < dat.length; i++) {
+                var arr = dat[i].date.split("-");
+                dat[i].date = arr[2] + "/" + arr[1] + "/" + arr[0];
+                tmp = tmp + '<tr>';
+                tmp = tmp + '<td>' + dat[i].date.toString() + '</td>';
+                tmp = tmp + '<td>' + dat[i].bill_no.toString() + '</td>';
+                tmp = tmp + '<td>' + dat[i].party_name.toString() + '</td>';
+                tmp = tmp + '<td>' + dat[i].bale_no.toString() + '</td>';
+                tmp = tmp + '<td>' + dat[i].party_quality_name.toString() + '</td>';
+                tmp = tmp + '<td>' + dat[i].our_quality_name.toString() + '</td>';
+                tmp = tmp + '<td>' + dat[i].design.toString() + '</td>';
+                tmp = tmp + '<td>' + dat[i].hsn_code.toString() + '</td>';
+                tmp = tmp + '<td>' + dat[i].taka.toString() + '</td>';
+                tmp = tmp + '<td>' + dat[i].mts.toString() + '</td>';
+                tmp = tmp + '<td>' + dat[i].shortage.toString() + '</td>';
+                tmp = tmp + '<td>' + dat[i].place.toString() + '</td>';
+                tmp = tmp + '<td>' + dat[i].open.toString() + '</td>';
+
+                tmp = tmp + '<td>' + '<button onclick="deleteGivenPurchaseEntry(this.id)"  class="btn btn-danger" id="delete_btnn" >Delete</button> ' + '</td>';
+                tmp = tmp + '</tr>';
+            }
+            purchasePage.innerHTML = starts + tmp + ends;
+            for (var i = 0; i < dat.length; i++) {
+                document.getElementById("delete_btnn").setAttribute("id", "delete" + dat[i].id.toString());
             }
         }
     })
 })
 
-$(document).on('submit', '#formToBeDeleted', function (e) {
-    e.preventDefault();
+
+function deleteGivenPurchaseEntry(id_to_delete) {
     swal({
-        title: "This Entry will be deleted permanently!",
+        title: "This Entry will be Deleted permanently!",
         text: "Are you sure to proceed?",
         icon: "warning",
         buttons: {
-                confirm: 'Yes',
-                cancel: 'No'
-            },
+            confirm: 'Yes',
+            cancel: 'No'
+        },
         dangerMode: true,
     })
         .then((isConfirm) => {
             if (isConfirm) {
-                var ele = document.getElementById('purchasePage');
+                var purchasePage = document.getElementById('purchasePage');
 
+                var starts = '<br><br><table class="table table-striped table-bordered">\
+              <colgroup>\
+                   <col span="1" style="width: 10%;">\
+                   <col span="1" style="width: 7%;">\
+                   <col span="1" style="width: 10%;">\
+                   <col span="1" style="width: 7%;">\
+                   <col span="1" style="width: 10%;">\
+                   <col span="1" style="width: 10%;">\
+                   <col span="1" style="width: 6%;">\
+                   <col span="1" style="width: 5%;">\
+                   <col span="1" style="width: 6%;">\
+                   <col span="1" style="width: 7%;">\
+                   <col span="1" style="width: 5%;">\
+                   <col span="1" style="width: 7%;">\
+                   <col span="1" style="width: 7%;">\
+                   <col span="1" style="width: 7%;">\
+               </colgroup>\
+              <thead class="thead-dark">\
+              <tr>\
+                  <th>DATE</th>\
+                   <th>BILL</th>\
+                  <th>PARTY</th>\
+                  <th>BALE</th>\
+                  <th>P. QUAL</th>\
+                  <th>O. QUAL</th>\
+                  <th>DESIGN</th>\
+                  <th>HSN</th>\
+                  <th>TAKA</th>\
+                  <th>MTS</th>\
+                  <th>SHORT</th>\
+                  <th>PLACE</th>\
+                  <th>OPEN</th>\
+                 <th style="width: 50px;"></th>\
+              </tr>\
+              </thead>';
+                var ends = '</table>';
                 var csrftoken = getCookie('csrftoken');
+
                 $.ajax({
                     type: 'POST',
                     url: '/deleteGivenPurchase',
                     data: {
-                        bill: $('#bill_delete').val(),
-                        bale: $('#bale_delete').val(),
-                        party_quality: $('#party_quality_delete').val(),
+                        ids: id_to_delete,
+                        bill: bill_no_del_table,
+                        bale: bale_no_del_table,
                         csrfmiddlewaretoken: csrftoken
                     },
                     success: function (data) {
-                        swal("Entry Removed!", "Your entry is deleted permanently!", "success");
-                        ele.innerHTML = ''
-                    },
-                    error: function (data) {
-                        swal({
-                            icon: 'error',
-                            title: 'Error',
-                            text: 'Some Unknown Error Occured',
-                        })
+                        dat = JSON.parse(data);
+                        for (var i = 0; i < dat.length; i++) {
+                            dat[i] = JSON.parse(dat[i])
+                        }
+                        if (dat.length === 0){
+                            purchasePage.innerHTML = ""
+                        }
+                        else {
+
+                            var tmp = '';
+                            for (var i = 0; i < dat.length; i++) {
+                                var arr = dat[i].date.split("-");
+                                dat[i].date = arr[2] + "/" + arr[1] + "/" + arr[0];
+                                tmp = tmp + '<tr>';
+                                tmp = tmp + '<td>' + dat[i].date.toString() + '</td>';
+                                tmp = tmp + '<td>' + dat[i].bill_no.toString() + '</td>';
+                                tmp = tmp + '<td>' + dat[i].party_name.toString() + '</td>';
+                                tmp = tmp + '<td>' + dat[i].bale_no.toString() + '</td>';
+                                tmp = tmp + '<td>' + dat[i].party_quality_name.toString() + '</td>';
+                                tmp = tmp + '<td>' + dat[i].our_quality_name.toString() + '</td>';
+                                tmp = tmp + '<td>' + dat[i].design.toString() + '</td>';
+                                tmp = tmp + '<td>' + dat[i].hsn_code.toString() + '</td>';
+                                tmp = tmp + '<td>' + dat[i].taka.toString() + '</td>';
+                                tmp = tmp + '<td>' + dat[i].mts.toString() + '</td>';
+                                tmp = tmp + '<td>' + dat[i].shortage.toString() + '</td>';
+                                tmp = tmp + '<td>' + dat[i].place.toString() + '</td>';
+                                tmp = tmp + '<td>' + dat[i].open.toString() + '</td>';
+
+                                tmp = tmp + '<td>' + '<button onclick="deleteGivenPurchaseEntry(this.id)"  class="btn btn-danger" id="delete_btnn" >Delete</button> ' + '</td>';
+                                tmp = tmp + '</tr>';
+                            }
+                            purchasePage.innerHTML = starts + tmp + ends;
+                            for (var i = 0; i < dat.length; i++) {
+                                document.getElementById("delete_btnn").setAttribute("id", "delete" + dat[i].id.toString());
+                            }
+                        }
                     }
                 })
 
             }
         });
-})
-
-
-
-
-
-
-
-
+}
 
 
 function editPurchase() {
@@ -441,26 +473,23 @@ function editPurchase() {
 function billBaleMapping2() {
     document.getElementById('bale_options_edit').innerHTML = '';
     bill_id = document.getElementById('bill_no_for_edit').value;
-    if(bill_id === ""){
+    if (bill_id === "") {
         var doNothing = 0;
-    }
-    else if(billbaleMap[bill_id] != null) {
+    } else if (billbaleMap[bill_id] != null) {
         var arr = billbaleMap[bill_id];
         var option_field = '';
         for (var j = 0; j < arr.length; j++) {
             option_field = option_field + '<option>' + arr[j].toString() + '</option>'
         }
         document.getElementById('bale_options_edit').innerHTML = option_field;
-    }
-    else{
-         swal({
-                    icon: 'error',
-                    title: 'Error',
-                    text: 'No Entry Found with Bill Number = ' + bill_id,
-                })
+    } else {
+        swal({
+            icon: 'error',
+            title: 'Error',
+            text: 'No Entry Found with Bill Number = ' + bill_id,
+        })
     }
 }
-
 
 
 $(document).on('submit', '#formEdit', function (e) {
@@ -587,9 +616,9 @@ $(document).on('submit', '#formToBeEdited', function (e) {
         text: "Are you sure to proceed?",
         icon: "warning",
         buttons: {
-                confirm: 'Yes',
-                cancel: 'No'
-            },
+            confirm: 'Yes',
+            cancel: 'No'
+        },
         dangerMode: true,
     })
         .then((isConfirm) => {

@@ -64,24 +64,38 @@ def deletePurchase(request):
     if request.method == "POST":
         bill_r = request.POST['bill']
         bale_r = request.POST['bale']
+        obj = Purchase.objects.filter(bill_no=bill_r, bale_no=bale_r)
+        lst = []
+        for item in obj:
+            context = json.dumps(PurchaseSerializer(item).data)
+            context = context[:len(context) - 1]
+            context = context + ", " + '"id": ' + str(item.id) + '}'
+            lst.append(context)
 
-        d = Purchase.objects.get(bill_no=bill_r, bale_no=bale_r)
-
-        context = json.dumps(PurchaseSerializer(d).data)
-        return HttpResponse(context)
+        mydata = json.dumps(lst)
+        return HttpResponse(mydata)
 
 
 @csrf_exempt
 def deleteGivenPurchase(request):
     if request.method == "POST":
-        bill_r = request.POST['bill']
-        bale_r = request.POST['bale']
-        party_quality_r = request.POST['party_quality']
-
-        d = Purchase.objects.get(bill_no=bill_r, bale_no=bale_r, party_quality_name=party_quality_r)
+        id_r = int(request.POST['ids'][6:])
+        d = Purchase.objects.get(id=id_r)
         d.delete()
 
-        return HttpResponse()
+        bill_r = request.POST['bill']
+        bale_r = request.POST['bale']
+
+        obj = Purchase.objects.filter(bill_no=bill_r, bale_no=bale_r)
+        lst = []
+        for item in obj:
+            context = json.dumps(PurchaseSerializer(item).data)
+            context = context[:len(context) - 1]
+            context = context + ", " + '"id": ' + str(item.id) + '}'
+
+            lst.append(context)
+        mydata = json.dumps(lst)
+        return HttpResponse(mydata)
 
 
 @csrf_exempt

@@ -360,29 +360,32 @@ function deleteGivenSaleEntry(id_to_delete) {
                     },
                     success: function (data) {
                         dat = JSON.parse(data);
-                        console.log(dat);
                         for (var i = 0; i < dat.length; i++) {
                             dat[i] = JSON.parse(dat[i])
                         }
-
-                        var tmp = '';
-                        for (var i = 0; i < dat.length; i++) {
-                            var arr = dat[i].date.split("-");
-                            dat[i].date = arr[2] + "/" + arr[1] + "/" + arr[0];
-                            tmp = tmp + '<tr>';
-                            tmp = tmp + '<td>' + dat[i].date.toString() + '</td>';
-                            tmp = tmp + '<td>' + dat[i].buyer_name.toString() + '</td>';
-                            tmp = tmp + '<td>' + dat[i].bale_no.toString() + '</td>';
-                            tmp = tmp + '<td>' + dat[i].our_quality_name.toString() + '</td>';
-                            tmp = tmp + '<td>' + dat[i].design.toString() + '</td>';
-                            tmp = tmp + '<td>' + dat[i].taka.toString() + '</td>';
-                            tmp = tmp + '<td>' + dat[i].mts.toString() + '</td>';
-                            tmp = tmp + '<td>' + '<button onclick="deleteGivenSaleEntry(this.id)"  class="btn btn-danger" id="delete_btnn" >Delete</button> ' + '</td>';
-                            tmp = tmp + '</tr>';
+                        if (dat.length === 0){
+                            salesPage.innerHTML = ""
                         }
-                        salesPage.innerHTML = starts + tmp + ends;
-                        for (var i = 0; i < dat.length; i++) {
-                            document.getElementById("delete_btnn").setAttribute("id", "delete" + dat[i].id.toString());
+                        else {
+                            var tmp = '';
+                            for (var i = 0; i < dat.length; i++) {
+                                var arr = dat[i].date.split("-");
+                                dat[i].date = arr[2] + "/" + arr[1] + "/" + arr[0];
+                                tmp = tmp + '<tr>';
+                                tmp = tmp + '<td>' + dat[i].date.toString() + '</td>';
+                                tmp = tmp + '<td>' + dat[i].buyer_name.toString() + '</td>';
+                                tmp = tmp + '<td>' + dat[i].bale_no.toString() + '</td>';
+                                tmp = tmp + '<td>' + dat[i].our_quality_name.toString() + '</td>';
+                                tmp = tmp + '<td>' + dat[i].design.toString() + '</td>';
+                                tmp = tmp + '<td>' + dat[i].taka.toString() + '</td>';
+                                tmp = tmp + '<td>' + dat[i].mts.toString() + '</td>';
+                                tmp = tmp + '<td>' + '<button onclick="deleteGivenSaleEntry(this.id)"  class="btn btn-danger" id="delete_btnn" >Delete</button> ' + '</td>';
+                                tmp = tmp + '</tr>';
+                            }
+                            salesPage.innerHTML = starts + tmp + ends;
+                            for (var i = 0; i < dat.length; i++) {
+                                document.getElementById("delete_btnn").setAttribute("id", "delete" + dat[i].id.toString());
+                            }
                         }
                     }
                 })
