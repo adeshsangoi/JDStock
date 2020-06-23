@@ -335,3 +335,23 @@ def editGivenSale(request):
 
         mydata = json.dumps(lst)
         return HttpResponse(mydata)
+
+
+@csrf_exempt
+def salesReport(request):
+    return render(request, 'jd/salesReport.html')
+
+
+@csrf_exempt
+def salesReportData(request):
+    obj = Sale.objects.all()
+    lst = []
+    for item in obj:
+        context = json.dumps(SaleSerializer(item).data)
+        context = context[:len(context) - 1]
+        context = context + ", " + '"id": ' + str(item.id) + '}'
+
+        lst.append(context)
+
+    mydata = json.dumps(lst)
+    return HttpResponse(mydata)
