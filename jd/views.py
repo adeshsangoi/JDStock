@@ -339,7 +339,17 @@ def editGivenSale(request):
 
 @csrf_exempt
 def salesReport(request):
-    return render(request, 'jd/salesReport.html')
+    mydata = Purchase.objects.all()
+    dict = {}
+    for item in mydata:
+        dict[item.bale_no] = []
+    for item in mydata:
+        dict[item.bale_no].append(item.our_quality_name)
+    for item in mydata:
+        dict[item.bale_no].sort()
+    # return HttpResponse(json.dumps(dict))
+    data = (str(json.dumps(dict)))
+    return render(request, 'jd/salesReport.html',{"dict": data})
 
 
 @csrf_exempt
@@ -358,7 +368,43 @@ def salesReportData(request):
 
 
 @csrf_exempt
+def editGivenSaleInReport(request):
+    if request.method == "POST":
+        id_r = int(request.POST['id'][4:])
+        date_r = request.POST['date_popup']
+        buyer_r = request.POST['party_popup']
+        bale_r = request.POST['bale_popup']
+        our_quality_r = request.POST['our_quality_popup']
+        design_r = Purchase.objects.get(bale_no=bale_r, our_quality_name=our_quality_r).design
+        taka_r = request.POST['taka_popup']
+        mts_r = request.POST['mts_popup']
+
+        obj = Sale.objects.get(id=id_r)
+        obj.date = date_r
+        obj.buyer_name = buyer_r
+        obj.bale_no = bale_r
+        obj.our_quality_name = our_quality_r
+        obj.design = design_r
+        obj.taka = taka_r
+        obj.mts = mts_r
+        obj.save()
+
+        obj = Sale.objects.all()
+        lst = []
+        for item in obj:
+            context = json.dumps(SaleSerializer(item).data)
+            context = context[:len(context) - 1]
+            context = context + ", " + '"id": ' + str(item.id) + '}'
+
+            lst.append(context)
+
+        mydata = json.dumps(lst)
+        return HttpResponse(mydata)
+
+
+@csrf_exempt
 def purchaseReport(request):
+
     return render(request, 'jd/purchaseReport.html')
 
 
