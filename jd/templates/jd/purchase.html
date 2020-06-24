@@ -12,13 +12,17 @@
 <div class="container" style="padding-top: 50px;" id="purchase-header">
     <div class="row">
         <div class="col-md-2">
-            <button onclick="addPurchase()" class="btn btn-primary" style="width: 100%">Add Purchase</button>
+            <button onclick="addPurchase()" class="btn btn-info" style="width: 100%">Add Purchase</button>
         </div>
         <div class="col-md-2">
             <button onclick="editPurchase()" class="btn btn-success" style="width: 100%">Edit Purchase</button>
         </div>
         <div class="col-md-2">
             <button onclick="deletePurchase()" class="btn btn-danger" style="width: 100%">Delete Purchase</button>
+        </div>
+        <div class="col-md-5"></div>
+        <div class="col-md-1">
+            <a href="{% url 'home' %}"><button class="btn btn-secondary" style="width: 100%">Home</button></a>
         </div>
     </div>
 </div>

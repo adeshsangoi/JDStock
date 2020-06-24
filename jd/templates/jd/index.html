@@ -4,29 +4,32 @@
     <meta charset="UTF-8">
     <title>Title</title>
     <link href="../../static/jd/assets/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
-    <link href="../../static/jd/jdsales.css" rel="stylesheet">
+    <link href="../../static/jd/jdpurchase.css" rel="stylesheet">
 </head>
 <style>
 </style>
 <body>
+<br>
+<br>
 <div class="container">
-    <div class="card card-container">
-        <form class="form-signin" id="form1">
-            <div class="row">
-                <div class="col-md-4">
-                    <input id="bill" class="form-control" placeholder="Bill Number" type="number" required>
-                </div>
-                <div class="col-md-4">
-                    <input id="bale" class="form-control" placeholder="Bale Number" type="number" required>
-                </div>
-                <div class="col-md-4">
-                    <input id="party" class="form-control" placeholder="Party Name" type="text" required>
-                </div>
-            </div>
-            <br>
-            <button class="btn btn-lg btn-primary btn-block btn-signin" type="submit">View Entry</button>
-        </form>
+    <div class="row">
+        <div class="col-md-3">
+            <a href="{% url 'purchase' %}" ><button style="width: 100%;height: 50px;font-size: 20px;" class="btn btn-info">NEW PURCHASE</button></a>
+        </div>
+        <div class="col-md-3">
+            <a href="{% url 'sale' %}" ><button style="width: 100%;height: 50px;font-size: 20px;" class="btn btn-success">NEW SALE</button></a>
+        </div>
     </div>
+    <br>
+    <div class="row">
+        <div class="col-md-3">
+            <a href="{% url 'purchaseReport' %}" ><button style="width: 100%;height: 50px;font-size: 20px;" class="btn btn-danger">PURCHASE REPORT</button></a>
+        </div>
+        <div class="col-md-3">
+            <a href="{% url 'salesReport' %}" ><button style="width: 100%;height: 50px;font-size: 20px;" class="btn btn-secondary">SALES REPORT</button></a>
+        </div>
+    </div>
+
 </div>
 <script src="../../static/jd/assets/vendor/jquery/jquery.min.js"></script>
 <script src="../../static/jd/assets/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
