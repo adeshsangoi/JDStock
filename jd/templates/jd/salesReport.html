@@ -12,23 +12,48 @@
 <br>
 <div class="container" id="salesReport-header">
     <div class="row">
-    <div class="col-lg-3">
-        <label for="filter1" style="font-family: sans-serif"> Enter Bale Number : </label><input class="form-control" type="text" oninput="this.value = this.value.toUpperCase()" id="filter1" onchange="selectGivenTable()">
+        <div class="col-lg-3">
+            <label for="filter1" style="font-family: sans-serif"> Enter Bale Number : </label><input
+                class="form-control" type="text" oninput="this.value = this.value.toUpperCase()" id="filter1"
+                onchange="selectGivenTable()">
+        </div>
+        <div class="col-lg-3">
+            <label for="filter2"> Enter Quality Number : &nbsp; </label><input class="form-control" type="text"
+                                                                               oninput="this.value = this.value.toUpperCase()"
+                                                                               id="filter2"
+                                                                               onchange="selectGivenTable()">
+        </div>
+        <div class="col-lg-3">
+            <label for="filter3"> Enter Design Number : &nbsp; </label><input class="form-control" type="text"
+                                                                              oninput="this.value = this.value.toUpperCase()"
+                                                                              id="filter3"
+                                                                              onchange="selectGivenTable()">
+        </div>
+        <div class="col-lg-3">
+            <label for="filter4"> Enter Buyer Name : &nbsp; </label><input class="form-control" type="text"
+                                                                           oninput="this.value = this.value.toUpperCase()"
+                                                                           id="filter4" onchange="selectGivenTable()">
+        </div>
     </div>
-    <div class="col-lg-3">
-    <label for="filter2"> Enter Quality Number : &nbsp; </label><input class="form-control" type="text" oninput="this.value = this.value.toUpperCase()" id="filter2" onchange="selectGivenTable()">
-    </div>
-     <div class="col-lg-3">
-    <label for="filter3"> Enter Design Number : &nbsp; </label><input class="form-control" type="text" oninput="this.value = this.value.toUpperCase()" id="filter3" onchange="selectGivenTable()">
-    </div>
-    <div class="col-lg-3">
-    <label for="filter4"> Enter Buyer Name : &nbsp; </label><input class="form-control" type="text" oninput="this.value = this.value.toUpperCase()" id="filter4" onchange="selectGivenTable()">
-    </div>
+    <br>
+    <div class="row">
+        <div class="col-lg-3">
+            <label for="filter5" style="font-family: sans-serif"> Start Date : </label><input class="form-control"
+                                                                                              type="date" id="filter5"
+                                                                                              onchange="selectGivenTable()">
+        </div>
+        <div class="col-lg-3">
+            <label for="filter6" style="font-family: sans-serif"> End Date : </label><input class="form-control"
+                                                                                            type="date" id="filter6"
+                                                                                            onchange="selectGivenTable()">
+        </div>
     </div>
     <br>
     <div class="row">
         <div class="col-lg-10"></div>
-        <div  class="col-lg-2"><button class="btn btn-primary" onclick="exportSalesTable()">Export as Excel</button> </div>
+        <div class="col-lg-2">
+            <button class="btn btn-primary" onclick="exportSalesTable()">Export as Excel</button>
+        </div>
     </div>
 </div>
 
@@ -81,10 +106,10 @@
 <script src="../../static/jd/assets/vendor/jquery/jquery.min.js"></script>
 <script src="../../static/jd/assets/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
 <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
-{#<script src="https://cdn.rawgit.com/rainabba/jquery-table2excel/1.1.0/dist/jquery.table2excel.min.js"></script>#}
 <script src="https://rawgit.com/unconditional/jquery-table2excel/master/src/jquery.table2excel.js"></script>
 <script src="../../static/jd/jdSalesReport.js"></script>
 </body>
 
-
 </html>
+
+

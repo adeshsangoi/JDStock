@@ -355,3 +355,23 @@ def salesReportData(request):
 
     mydata = json.dumps(lst)
     return HttpResponse(mydata)
+
+
+@csrf_exempt
+def purchaseReport(request):
+    return render(request, 'jd/purchaseReport.html')
+
+
+@csrf_exempt
+def purchaseReportData(request):
+    obj = Purchase.objects.all()
+    lst = []
+    for item in obj:
+        context = json.dumps(PurchaseSerializer(item).data)
+        context = context[:len(context) - 1]
+        context = context + ", " + '"id": ' + str(item.id) + '}'
+
+        lst.append(context)
+
+    mydata = json.dumps(lst)
+    return HttpResponse(mydata)

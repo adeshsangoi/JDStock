@@ -23,4 +23,6 @@ urlpatterns = [
     path('showEditEntryPurchase', views.showEditEntryPurchase, name="showEditEntryPurchase"),
     path('salesReport', views.salesReport, name="salesReport"),
     path('salesReportData', views.salesReportData, name='salesReportData'),
+    path('purchaseReport', views.purchaseReport, name="purchaseReport"),
+    path('purchaseReportData', views.purchaseReportData, name='purchaseReportData'),
 ]

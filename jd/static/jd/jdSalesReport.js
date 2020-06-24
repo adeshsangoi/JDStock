@@ -1,3 +1,6 @@
+var stop_closing = 0;
+var final_edit_id;
+
 function getCookie(name) {
     var cookieValue = null;
     if (document.cookie && document.cookie !== '') {
@@ -66,7 +69,7 @@ $(document).ready(function () {
                 tmp = tmp + '<td>' + dat[i].mts.toString() + '</td>';
                 tmp = tmp + '<td>' + dat[i].buyer_name.toString() + '</td>'
                 tmp = tmp + '<td>' + dat[i].date.toString() + '</td>';
-                tmp = tmp + '<td>' + '<button onclick="editGivenSaleEntry(this.id)"  class="btn btn-success" id="edit_btnn" style="width: 100%;"> Edit </button> ' + '</td>';
+                tmp = tmp + '<td>' + '<button onclick="showGivenSaleEntry(this.id)"  class="btn btn-success" id="edit_btnn" style="width: 100%;"> Edit </button> ' + '</td>';
                 tmp = tmp + '</tr>';
             }
             salesReport.innerHTML = starts + tmp + ends;
@@ -106,6 +109,21 @@ function selectGivenTable() {
     var filter2data = document.getElementById("filter2").value;
     var filter3data = document.getElementById("filter3").value;
     var filter4data = document.getElementById("filter4").value;
+    var filter5data = document.getElementById("filter5").value;
+    var filter6data = document.getElementById("filter6").value;
+    var pattern = /(\d{2})\/(\d{2})\/(\d{4})/;
+    var startDate = ""
+    var endDate = ""
+    if (filter5data !== "") {
+        var arr = filter5data.split("-");
+        filter5data = arr[2] + "/" + arr[1] + "/" + arr[0];
+        startDate = new Date(filter5data.replace(pattern, '$3-$2-$1'));
+    }
+    if (filter6data !== "") {
+        var arr2 = filter6data.split("-");
+        filter6data = arr2[2] + "/" + arr2[1] + "/" + arr2[0];
+        endDate = new Date(filter6data.replace(pattern, '$3-$2-$1'));
+    }
 
     var no_of_entries = document.getElementById("tableSales").childNodes[4].childNodes.length;
 
@@ -114,8 +132,11 @@ function selectGivenTable() {
         var quality = document.getElementById("tableSales").childNodes[4].childNodes[i].childNodes[1].innerHTML;
         var design = document.getElementById("tableSales").childNodes[4].childNodes[i].childNodes[2].innerHTML;
         var buyer = document.getElementById("tableSales").childNodes[4].childNodes[i].childNodes[5].innerHTML;
+        var dt = document.getElementById("tableSales").childNodes[4].childNodes[i].childNodes[6].innerHTML;
+        var dateEntry = new Date(dt.replace(pattern, '$3-$2-$1'));
 
-        if ((bale.includes(filter1data)) && (quality.includes(filter2data)) && (design.includes(filter3data)) && (buyer.includes(filter4data))) {
+        if ((bale.includes(filter1data)) && (quality.includes(filter2data)) && (design.includes(filter3data)) && (buyer.includes(filter4data))
+            && ((startDate === "")|| dateEntry >= startDate) && ((endDate === "")|| dateEntry <= endDate)) {
             var ele = document.getElementById("tableSales").childNodes[4].childNodes[i];
             ele.classList.remove('hide-data');
             ele.style.display = "";
@@ -129,9 +150,77 @@ function selectGivenTable() {
 
 function exportSalesTable() {
     var copyTable = $("#tableSales").clone(false);
-        copyTable.find('.hide-data').remove(); //removing rows while exporting
-        copyTable.table2excel({
-            filename: "SalesReport"
-        });
-        copyTable.remove();
+    copyTable.find('.hide-data').remove(); //removing rows while exporting
+    copyTable.table2excel({
+        filename: "SalesReport"
+    });
+    copyTable.remove();
+}
+
+
+function showGivenSaleEntry(id_to_edit) {
+    var csrftoken = getCookie('csrftoken');
+    $('#popupEditFormSaleReport').show();
+    $('#salesReport').hide();
+    $('#salesReport-header').hide();
+
+    $.ajax({
+        type: 'POST',
+        url: '/showEditEntry',
+        data: {
+            id: id_to_edit,
+            csrfmiddlewaretoken: csrftoken
+        },
+        success: function (data) {
+            item = JSON.parse(data);
+            document.getElementById("date_edit_popup").value = item.date;
+            document.getElementById("party_edit_popup").value = item.buyer_name;
+            document.getElementById("bale_edit_popup").value = item.bale_no;
+            document.getElementById("taka_edit_popup").value = item.taka;
+            document.getElementById("mts_edit_popup").value = item.mts;
+            document.getElementById("design_edit_popup").value = item.design;
+
+
+            bale_id = item.bale_no;
+            var arr = baleProdMap[bale_id];
+            var option_field = '';
+            for (var j = 0; j < arr.length; j++) {
+                option_field = option_field + '<option>' + arr[j].toString() + '</option>'
+            }
+            document.getElementById('our_quality_edit_popup').innerHTML = option_field;
+
+            document.getElementById("our_quality_edit_popup").value = item.our_quality_name;
+            final_edit_id = id_to_edit;
+        },
+        error: function (xhr) {
+            var error_message = xhr.responseText.split(" ")[0]
+            console.log(error_message)
+            if (error_message === "MultipleObjectsReturned") {
+                swal({
+                    icon: 'error',
+                    title: 'Error',
+                    text: 'More than 1 Entry Found with given details',
+                })
+            } else if (error_message === "DoesNotExist") {
+                swal({
+                    icon: 'error',
+                    title: 'Error',
+                    text: 'No Entry Found with given details',
+                })
+            } else {
+                swal({
+                    icon: 'error',
+                    title: 'Error',
+                    text: 'Some Unknown Error Occured',
+                })
+            }
+        }
+    })
+}
+
+function closePopup() {
+    stop_closing = 2;
+    $('#popupEditFormSale').hide();
+    $('#salesPage').show();
+    $('#sale-header').show();
 }
