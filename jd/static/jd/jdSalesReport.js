@@ -105,7 +105,6 @@ $(document).ready(function () {
 });
 
 function selectGivenTable() {
-    console.log("Entered");
     var filter1data = document.getElementById("filter1").value;
     var filter2data = document.getElementById("filter2").value;
     var filter3data = document.getElementById("filter3").value;

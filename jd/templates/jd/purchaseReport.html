@@ -3,8 +3,145 @@
 <head>
     <meta charset="UTF-8">
     <title>Title</title>
+    <link href="../../static/jd/assets/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+    <link href="../../static/jd/jdpurchase.css" rel="stylesheet">
 </head>
+<style>
+</style>
 <body>
+<br>
+<div class="container" id="purchaseReport-header">
+{#    <div class="row">#}
+{#        <div class="col-md-11"></div>#}
+{#        <div class="col-md-1">#}
+{#            <a href="{% url 'home' %}"><button class="btn btn-secondary" style="width: 100%">Home</button></a>#}
+{#        </div>#}
+{#    </div>#}
+{#    <br>#}
+    <div class="row">
+        <div class="col-lg-3">
+            <label for="filter1" style="font-family: sans-serif"> Bill Number : </label><input
+                class="form-control" type="text" oninput="this.value = this.value.toUpperCase()" id="filter1"
+                onchange="selectGivenTable()">
+        </div>
+        <div class="col-lg-3">
+            <label for="filter2"> Bale Number : &nbsp; </label><input class="form-control" type="text"
+                                                                               oninput="this.value = this.value.toUpperCase()"
+                                                                               id="filter2"
+                                                                               onchange="selectGivenTable()">
+        </div>
+        <div class="col-lg-3">
+            <label for="filter3"> Party Quality Name :  </label><input class="form-control" type="text"
+                                                                              oninput="this.value = this.value.toUpperCase()"
+                                                                              id="filter3"
+                                                                              onchange="selectGivenTable()">
+        </div>
+        <div class="col-lg-3">
+            <label for="filter4"> Our Quality Name :  </label><input class="form-control" type="text"
+                                                                           oninput="this.value = this.value.toUpperCase()"
+                                                                           id="filter4" onchange="selectGivenTable()">
+        </div>
+    </div>
+    <br>
+    <div class="row">
+        <div class="col-lg-3">
+            <label for="filter5" style="font-family: sans-serif"> Design Number : </label><input
+                class="form-control" type="text" oninput="this.value = this.value.toUpperCase()" id="filter5"
+                onchange="selectGivenTable()">
+        </div>
+        <div class="col-lg-3">
+            <label for="filter6"> Party Name :  </label><input class="form-control" type="text"
+                                                                               oninput="this.value = this.value.toUpperCase()"
+                                                                               id="filter6"
+                                                                               onchange="selectGivenTable()">
+        </div>
+        <div class="col-lg-3">
+            <label for="filter7"> Place :  </label><input class="form-control" type="text"
+                                                                              oninput="this.value = this.value.toUpperCase()"
+                                                                              id="filter7"
+                                                                              onchange="selectGivenTable()">
+        </div>
+        <div class="col-lg-3">
+            <label for="filter8"> Open / Close :  </label><input class="form-control" type="text"
+                                                                           oninput="this.value = this.value.toUpperCase()"
+                                                                           id="filter8" onchange="selectGivenTable()">
+        </div>
+    </div>
+    <br>
+    <div class="row">
+        <div class="col-lg-3">
+            <label for="filter9" style="font-family: sans-serif"> Start Date : </label><input class="form-control"
+                                                                                              type="date" id="filter9"
+                                                                                              onchange="selectGivenTable()">
+        </div>
+        <div class="col-lg-3">
+            <label for="filter10" style="font-family: sans-serif"> End Date : </label><input class="form-control"
+                                                                                            type="date" id="filter10"
+                                                                                            onchange="selectGivenTable()">
+        </div>
+    </div>
+    <br>
+    <div class="row">
+        <div class="col-lg-10"></div>
+        <div class="col-lg-2">
+            <button class="btn btn-primary" onclick="exportPurchaseTable()">Export as Excel</button>
+        </div>
+    </div>
+</div>
 
+<div class="container" id="purchaseReport">
+
+</div>
+{##}
+{#<div class="card card-container container" id="popupEditFormPurchaseReport">#}
+{#    <form class="form-signin" id="popupForm">#}
+{#        <button onclick="closePopup(this.id)" id="close" style="float: right;width: 5%;">X</button>#}
+{#        <br>#}
+{#        <h6 style="font-family: sans-serif;text-transform: uppercase;padding-left: 5px;">DETAILS OF SELECTED ENTRY</h6>#}
+{#        <div class="row">#}
+{#            <div class="col-md-3">#}
+{#                <input id="date_edit_popup" class="form-control" placeholder="Date" type="date" required>#}
+{#            </div>#}
+{#            <div class="col-md-3">#}
+{#                <input id="party_edit_popup" class="form-control" placeholder="Party Name" type="text"#}
+{#                       oninput="this.value = this.value.toUpperCase()" required>#}
+{#            </div>#}
+{#        </div>#}
+{#        <hr style="margin-left: -24px;margin-right: -24px;">#}
+{#        <div class="row">#}
+{#            <div class="col-md-3">#}
+{#                <input id="bale_edit_popup" onchange="baleProdMappingEdit()" class="form-control"#}
+{#                       placeholder="Bale Number" type="number" required>#}
+{#            </div>#}
+{#            <div class="col-md-3">#}
+{#                <select id="our_quality_edit_popup" class="form-control" required>#}
+{#                </select>#}
+{#            </div>#}
+{#            <div class="col-md-2">#}
+{#                <input id="design_edit_popup" class="form-control" placeholder="Design"#}
+{#                       oninput="this.value = this.value.toUpperCase()" type="text" readonly>#}
+{#            </div>#}
+{#            <div class="col-md-2">#}
+{#                <input id="taka_edit_popup" class="form-control" placeholder="Taka"#}
+{#                       oninput="this.value = this.value.toUpperCase()" type="number" required>#}
+{#            </div>#}
+{#            <div class="col-md-2">#}
+{#                <input id="mts_edit_popup" class="form-control" placeholder="Metres"#}
+{#                       oninput="this.value = this.value.toUpperCase()" type="text" required>#}
+{#            </div>#}
+{#        </div>#}
+{#        <button class="btn btn-lg btn-primary btn-block btn-signin" id="editPopupSubmit" type="submit">Edit Entry#}
+{#        </button>#}
+{#    </form>#}
+{#</div>#}
+
+<script src="../../static/jd/assets/vendor/jquery/jquery.min.js"></script>
+<script src="../../static/jd/assets/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+<script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+<script src="https://rawgit.com/unconditional/jquery-table2excel/master/src/jquery.table2excel.js"></script>
+<script src="../../static/jd/jdPurchaseReport.js"></script>
 </body>
+
 </html>
+
+
