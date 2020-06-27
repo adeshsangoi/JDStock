@@ -421,3 +421,51 @@ def purchaseReportData(request):
 
     mydata = json.dumps(lst)
     return HttpResponse(mydata)
+
+
+@csrf_exempt
+def editGivenPurchaseInReport(request):
+    if request.method == "POST":
+        id_r = int(request.POST['id'][4:])
+        date_r = request.POST['date']
+        place_r = request.POST['place']
+        open_r = request.POST['open']
+        bill_r = request.POST['bill']
+        bale_r = request.POST['bale']
+        party_r = request.POST['party']
+        party_quality_r = request.POST['party_quality']
+        our_quality_r = request.POST['our_quality']
+        hsn_r = request.POST['hsn']
+        taka_r = request.POST['taka']
+        mts_r = request.POST['mts']
+        shortage_r = request.POST['shortage']
+        design_r = request.POST['design']
+
+        d = Purchase.objects.get(id=id_r)
+        d.date = date_r
+        d.place = place_r
+        d.open = open_r
+        d.bill_no = bill_r
+        d.bale_no = bale_r
+        d.party_name = party_r
+        d.party_quality_name = party_quality_r
+        d.our_quality_name = our_quality_r
+        d.hsn_code = hsn_r
+        d.taka = taka_r
+        d.mts = mts_r
+        d.shortage = shortage_r
+        d.design = design_r
+
+        d.save()
+
+        obj = Purchase.objects.all()
+        lst = []
+        for item in obj:
+            context = json.dumps(PurchaseSerializer(item).data)
+            context = context[:len(context) - 1]
+            context = context + ", " + '"id": ' + str(item.id) + '}'
+            lst.append(context)
+
+        mydata = json.dumps(lst)
+        return HttpResponse(mydata)
+

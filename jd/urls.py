@@ -26,5 +26,6 @@ urlpatterns = [
     path('purchaseReport', views.purchaseReport, name="purchaseReport"),
     path('purchaseReportData', views.purchaseReportData, name='purchaseReportData'),
     path('editGivenSaleInReport', views.editGivenSaleInReport, name='editGivenSaleInReport'),
+    path('editGivenPurchaseInReport', views.editGivenPurchaseInReport, name='editGivenPurchaseInReport'),
 
 ]
