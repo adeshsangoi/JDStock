@@ -18,6 +18,32 @@ def sale(request):
     return render(request, 'jd/sale.html')
 
 
+def stockInHand(request):
+    return render(request, 'jd/stockInHand.html')
+
+
+def stockInHandData(request):
+    if request.method == "POST":
+        purchasedata = Purchase.objects.all()
+        dict = {}
+        for item in purchasedata:
+            dict[item.our_quality_name] = [0,0]
+        for item in purchasedata:
+            dict[item.our_quality_name][1] += float(item.mts)
+            dict[item.our_quality_name][0] += int(item.taka)
+
+        salesData = Sale.objects.all()
+        for item in salesData:
+            dict[item.our_quality_name][1] -= float(item.mts)
+            dict[item.our_quality_name][0] -= float(item.taka)
+
+        return HttpResponse(json.dumps(dict))
+
+
+def viewStock(request):
+    return render(request, 'jd/viewStock.html')
+
+
 @csrf_exempt
 def addPurchase(request):
     if request.method == "POST":
@@ -404,7 +430,6 @@ def editGivenSaleInReport(request):
 
 @csrf_exempt
 def purchaseReport(request):
-
     return render(request, 'jd/purchaseReport.html')
 
 
@@ -468,4 +493,3 @@ def editGivenPurchaseInReport(request):
 
         mydata = json.dumps(lst)
         return HttpResponse(mydata)
-
