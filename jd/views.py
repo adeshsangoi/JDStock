@@ -44,6 +44,37 @@ def viewStock(request):
     return render(request, 'jd/viewStock.html')
 
 
+def viewStockData(request):
+    if request.method == "POST":
+        purchasedata = Purchase.objects.all()
+        dict = {}
+        for item in purchasedata:
+            dict[str(item.bale_no) + str(item.our_quality_name)] = [0, 0]
+        for item in purchasedata:
+            dict[str(item.bale_no) + str(item.our_quality_name)][1] += float(item.mts)
+            dict[str(item.bale_no) + str(item.our_quality_name)][0] += int(item.taka)
+
+        salesData = Sale.objects.all()
+        for item in salesData:
+            dict[str(item.bale_no) + str(item.our_quality_name)][1] -= float(item.mts)
+            dict[str(item.bale_no) + str(item.our_quality_name)][0] -= float(item.taka)
+
+        for item in purchasedata:
+            item.taka_left = dict[str(item.bale_no) + str(item.our_quality_name)][0]
+            item.mts_left = dict[str(item.bale_no) + str(item.our_quality_name)][1]
+            item.save()
+
+        lst = []
+        for item in purchasedata:
+            context = json.dumps(PurchaseSerializer(item).data)
+            context = context[:len(context) - 1]
+            context = context + ", " + '"id": ' + str(item.id) + '}'
+            lst.append(context)
+
+        mydata = json.dumps(lst)
+        return HttpResponse(mydata)
+
+
 @csrf_exempt
 def addPurchase(request):
     if request.method == "POST":

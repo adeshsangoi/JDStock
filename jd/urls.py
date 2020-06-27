@@ -30,5 +30,5 @@ urlpatterns = [
     path('stockInHand', views.stockInHand, name='stockInHand'),
     path('stockInHandData', views.stockInHandData, name='stockInHandData'),
     path('viewStock', views.viewStock, name='viewStock'),
-
+    path('viewStockData', views.viewStockData, name='viewStockData'),
 ]

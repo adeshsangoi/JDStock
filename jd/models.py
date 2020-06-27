@@ -18,10 +18,12 @@ class Purchase(models.Model):
     taka = models.IntegerField()
     mts = models.CharField(max_length=10)
     shortage = models.CharField(max_length=10)
-    design = models.CharField(max_length=20,blank=True)
+    design = models.CharField(max_length=20, blank=True)
+    taka_left = models.IntegerField(blank=True, null=True)
+    mts_left = models.CharField(max_length=10, blank=True, null=True)
 
     def __str__(self):
-        return "Bill " + str(self.bill_no) + " - Bale " + str(self.bale_no) + " - " + self.party_name + " - " + str(self.date)
+        return "Bill " + str(self.bill_no) + " - Bale " + str(self.bale_no) + " - " + self.our_quality_name + " - " + str(self.date)
 
 
 class PurchaseSerializer(serializers.Serializer):
@@ -38,6 +40,8 @@ class PurchaseSerializer(serializers.Serializer):
     mts = serializers.CharField(max_length=10)
     shortage = serializers.CharField(max_length=10)
     design = serializers.CharField(max_length=20)
+    taka_left = serializers.IntegerField()
+    mts_left = serializers.CharField(max_length=10)
 
 
 class Sale(models.Model):

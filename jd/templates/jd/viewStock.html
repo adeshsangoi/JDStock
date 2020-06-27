@@ -2,9 +2,75 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <title>Purchase Report</title>
+    <link href="../../static/jd/assets/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+    <link href="../../static/jd/jdpurchase.css" rel="stylesheet">
 </head>
+<style>
+</style>
 <body>
+<br>
+<div class="container" id="viewStock-header">
+{#    <div class="row">#}
+{#        <div class="col-md-11"></div>#}
+{#        <div class="col-md-1">#}
+{#            <a href="{% url 'home' %}"><button class="btn btn-secondary" style="width: 100%">Home</button></a>#}
+{#        </div>#}
+{#    </div>#}
+{#    <br>#}
+    <div class="row">
+        <div class="col-lg-3">
+            <label for="filter2"> Bale Number : </label><input class="form-control" type="text"
+                                                                               oninput="this.value = this.value.toUpperCase()"
+                                                                               id="filter2"
+                                                                               onchange="selectGivenTable()">
+        </div>
+        <div class="col-lg-3">
+            <label for="filter4"> Our Quality Name :  </label><input class="form-control" type="text"
+                                                                           oninput="this.value = this.value.toUpperCase()"
+                                                                           id="filter4" onchange="selectGivenTable()">
+        </div>
+        <div class="col-lg-3">
+            <label for="filter5" style="font-family: sans-serif"> Design Number : </label><input
+                class="form-control" type="text" oninput="this.value = this.value.toUpperCase()" id="filter5"
+                onchange="selectGivenTable()">
+        </div>
 
+        <div class="col-lg-3">
+            <label for="filter7"> Place :  </label><input class="form-control" type="text"
+                                                                              oninput="this.value = this.value.toUpperCase()"
+                                                                              id="filter7"
+                                                                              onchange="selectGivenTable()">
+        </div>
+    </div>
+    <br>
+    <div class="row">
+        <div class="col-lg-3">
+            <label for="filter8"> Open / Pack :  </label><input class="form-control" type="text"
+                                                                           oninput="this.value = this.value.toUpperCase()"
+                                                                           id="filter8" onchange="selectGivenTable()">
+        </div>
+{#    </div>#}
+{#    <br>#}
+{#    <div class="row">#}
+        <div class="col-lg-7"></div>
+        <div class="col-lg-2">
+            <button class="btn btn-primary" onclick="exportStockTable()" style="margin-top: 30px;">Export as Excel</button>
+        </div>
+    </div>
+</div>
+
+<div class="container" id="viewStock">
+
+</div>
+
+<script src="../../static/jd/assets/vendor/jquery/jquery.min.js"></script>
+<script src="../../static/jd/assets/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+<script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+<script src="https://rawgit.com/unconditional/jquery-table2excel/master/src/jquery.table2excel.js"></script>
+<script src="../../static/jd/jdViewStock.js"></script>
 </body>
+
 </html>
+
+
