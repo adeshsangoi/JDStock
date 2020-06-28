@@ -44,6 +44,7 @@ def viewStock(request):
     return render(request, 'jd/viewStock.html')
 
 
+@csrf_exempt
 def viewStockData(request):
     if request.method == "POST":
         purchasedata = Purchase.objects.all()

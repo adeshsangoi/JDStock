@@ -17,7 +17,7 @@ function getCookie(name) {
 $(document).ready(function () {
     var viewStock = document.getElementById('viewStock');
 
-    var starts = '<br><br><table class="table table-striped table-bordered" id="tableViewStock" style="margin-left: -45px;">\
+    var starts = '<br><br><table class="table table-striped table-bordered" id="tableViewStock">\
               <colgroup>\
                    <col span="1" style="width: 10%;">\
                    <col span="1" style="width: 7%;">\
@@ -50,8 +50,8 @@ $(document).ready(function () {
               <th>SHORT</th>\
               <th>PLACE</th>\
               <th>OPEN</th>\
-              <th>L1</th>\
-              <th>L2</th>\
+              <th>TAKA LEFT</th>\
+              <th>QTY LEFT</th>\
               </tr>\
               </thead>';
     var ends = '</table>';
@@ -92,6 +92,16 @@ $(document).ready(function () {
                 tmp = tmp + '</tr>';
             }
             viewStock.innerHTML = starts + tmp + ends;
+            var taka_left = 0
+            var mts_left = 0
+            var no_of_entries = document.getElementById("tableViewStock").childNodes[4].childNodes.length;
+            for (i = 0; i < no_of_entries; i++) {
+                taka_left += parseInt(document.getElementById("tableViewStock").childNodes[4].childNodes[i].childNodes[13].innerHTML);
+                mts_left += parseFloat(document.getElementById("tableViewStock").childNodes[4].childNodes[i].childNodes[14].innerHTML);
+            }
+            document.getElementById("viewStock-head").innerHTML =
+            '<h5 >Total Taka Left = ' + taka_left.toString() + '</h5>\
+            <h5> Total Quantity Left = ' + mts_left.toString() + '</h5>';
         },
         error: function (xhr) {
             var error_message = xhr.responseText.split(" ")[0]
@@ -121,6 +131,8 @@ $(document).ready(function () {
 });
 
 function selectGivenTable() {
+    var taka_left = 0
+    var mts_left = 0
     var filter2data = document.getElementById("filter2").value;
     var filter4data = document.getElementById("filter4").value;
     var filter5data = document.getElementById("filter5").value;
@@ -141,11 +153,17 @@ function selectGivenTable() {
             var ele = document.getElementById("tableViewStock").childNodes[4].childNodes[i];
             ele.classList.remove('hide-data');
             ele.style.display = "";
+            taka_left += parseInt(document.getElementById("tableViewStock").childNodes[4].childNodes[i].childNodes[13].innerHTML);
+            mts_left += parseFloat(document.getElementById("tableViewStock").childNodes[4].childNodes[i].childNodes[14].innerHTML);
+
         } else {
             var ele2 = document.getElementById("tableViewStock").childNodes[4].childNodes[i];
             ele2.classList.add('hide-data');
             ele2.style.display = "none";
         }
+        document.getElementById("viewStock-head").innerHTML =
+            '<h5 >Total Taka Left = ' + taka_left.toString() + '</h5>\
+            <h5> Total Quantity Left = ' + mts_left.toString() + '</h5>';
     }
 }
 
